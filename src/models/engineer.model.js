@@ -19,5 +19,5 @@ const engineerSchema = new mongoose.Schema({
  }
 }, {timestamps: true})
 
-const Engineer = mongoose.model("Admin", engineerSchema);
+const Engineer = mongoose.model("Engineer", engineerSchema);
 module.exports = Engineer;
