@@ -23,7 +23,7 @@ exports.adminLogin = async (userName, password) => {
     process.env.JWT_SECRET
   );
 
-  const { password: _, ...adminWithoutPassword } = admin.toObject();
+  const { password, ...adminWithoutPassword } = admin.toObject();
 
   return {
     admin: adminWithoutPassword,
@@ -33,46 +33,47 @@ exports.adminLogin = async (userName, password) => {
 };
 
 exports.adminAddCustomer = async (userName, password, name, email) => {
-  let customer = await Customer.findOne({ userName });
-  if (customer) {
+  let existingCustomer = await Customer.findOne({
+    $or: [{ userName }, { email }]
+  });
+  if (existingCustomer) {
     return {
       customer: null,
-      message: "Customer already exist with this username",
+      message: "Customer already exist.",
     };
   }
-  let customerEmail = await Customer.findOne({ email });
-  console.log(customerEmail, userName, password, name, email);
-  if (customerEmail) {
+  if (!password) {
     return {
       customer: null,
-      message: "Customer already exist with this email",
+      message: "Password is required",
     };
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   const newCustomer = await Customer.create({
-    userName: userName,
-    name: name,
-    email: email,
+    userName,
+    name,
+    email,
     password: hashedPassword,
   });
-  const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
+  const { password, ...customerWithoutPassword } = newCustomer.toObject();
   return { customer: customerWithoutPassword, message: "Customer created" };
 };
 
 exports.adminAddEngineer = async (userName, password, name, email) => {
-  let engineer = await Engineer.findOne({ userName });
-  if (engineer) {
+  let existingEngineer = await Engineer.findOne({
+    $or: [{ userName }, { email }]
+  });
+  if (existingEngineer) {
     return {
       engineer: null,
-      message: "Engineer already exist with this username",
+      message: "Engineer already exist",
     };
   }
-  let engineerWithEmail = await Engineer.findOne({ email });
-  if (engineerWithEmail) {
+  if (!password) {
     return {
-      engineer: null,
-      message: "Engineer already exist with this email",
+      customer: null,
+      message: "Password is required",
     };
   }
   const salt = await bcrypt.genSalt(10);
@@ -83,6 +84,6 @@ exports.adminAddEngineer = async (userName, password, name, email) => {
     name,
     password: hashedPassword,
   });
-  const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
+  const { password, ...engineerWithoutPassword } = newEngineer.toObject();
   return { engineer: engineerWithoutPassword, message: "Engineer created" };
 };
