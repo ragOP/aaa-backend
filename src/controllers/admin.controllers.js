@@ -21,7 +21,7 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
 
 exports.handleAddCustomer = asyncHandler(async (req, res) => {
  const { userName, password, email, name} = req.body;
- const {customer, message} = await adminAddCustomer(userName, password, email, name);
+ const {customer, message} = await adminAddCustomer(userName, password, name, email);
 
  if(!customer){
   return res.status(200).json(
@@ -38,7 +38,7 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
 
 exports.handleAddEngineer = asyncHandler(async (req, res) => {
  const { userName, password, email, name} = req.body;
- const {engineer, message} = await adminAddEngineer(userName, password, email, name);
+ const {engineer, message} = await adminAddEngineer(userName, password, name, email);
 
  if(!engineer){
   return res.status(200).json(
