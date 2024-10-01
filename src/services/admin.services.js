@@ -23,7 +23,7 @@ exports.adminLogin = async (userName, password) => {
     process.env.JWT_SECRET
   );
 
-  const { password, ...adminWithoutPassword } = admin.toObject();
+  const { password:_, ...adminWithoutPassword } = admin.toObject();
 
   return {
     admin: adminWithoutPassword,
@@ -56,7 +56,7 @@ exports.adminAddCustomer = async (userName, password, name, email) => {
     email,
     password: hashedPassword,
   });
-  const { password, ...customerWithoutPassword } = newCustomer.toObject();
+  const { password:_, ...customerWithoutPassword } = newCustomer.toObject();
   return { customer: customerWithoutPassword, message: "Customer created" };
 };
 
@@ -84,6 +84,6 @@ exports.adminAddEngineer = async (userName, password, name, email) => {
     name,
     password: hashedPassword,
   });
-  const { password, ...engineerWithoutPassword } = newEngineer.toObject();
+  const { password:_, ...engineerWithoutPassword } = newEngineer.toObject();
   return { engineer: engineerWithoutPassword, message: "Engineer created" };
 };
