@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Engineer = require("../models/engineer.model");
-require("dotenv").config();
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });

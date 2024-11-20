@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
 require("dotenv").config();
+
+
+const morganFormat = ":method :url :status :response-time ms";
 
 const port = 8000 || process.env.PORT;
 
@@ -9,9 +13,27 @@ const handleConnectionToDB = require('./src/db/config');
 const adminRoute = require("./src/routes/admin.routes");
 const customerRoute = require("./src/routes/customer.routes");
 const engineerRoute = require("./src/routes/engineer.routes");
+const logger = require("./logger.js");
 
 app.use(cors());
 app.use(express.json());
+
+//Logger
+app.use(
+  morgan(morganFormat, {
+    stream: {
+      write: (message) => {
+        const logObject = {
+          method: message.split(" ")[0],
+          url: message.split(" ")[1],
+          status: message.split(" ")[2],
+          responseTime: message.split(" ")[3],
+        };
+        logger.info(JSON.stringify(logObject));
+      },
+    },
+  })
+);
 
 // Database Connection
 handleConnectionToDB(process.env.MONGO_URI);
