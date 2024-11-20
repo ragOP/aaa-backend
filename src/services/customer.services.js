@@ -41,3 +41,11 @@ exports.createComplaint = async (customerId, complaintData, images) => {
   });
   return { complaint, messaage: "Comaplaint registered successfully" };
 }
+
+exports.getMyComplaint = async (customerId) => {
+  const complaint = await Complaint.find({ customerId });
+  if (!complaint) {
+    return { complaint: null, message: "No complaint found" };
+  }
+  return { complaint, messaage: "Complaint retrieved successfully" };
+}
