@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin.models");
+const Customer = require("../models/customer.models");
 
 const admin = async (req, res, next) => {
  try {
@@ -40,6 +41,44 @@ const admin = async (req, res, next) => {
  }
 };
 
+
+const customer = async (req, res, next) => {
+  try {
+    let token = "";
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+ 
+    if (!token) {
+      return res
+        .status(400)
+        .json({ message: "You are not logged in. Please login to get access" });
+    }
+ 
+    const data = jwt.verify(token, process.env.JWT_SECRET);
+    if (!data) {
+      return res
+        .status(400)
+        .json({ message: "You are not logged in. Please login to get access" });
+    }
+    const customer = await Customer.find({ _id: data.id });
+    if (!customer) {
+      return res
+        .status(400)
+        .json({ message: "You are not logged in. Please login to get access" });
+    }
+ 
+    req.user = customer;
+    next();
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+ };
+
 module.exports = {
  admin,
+ customer
 };
