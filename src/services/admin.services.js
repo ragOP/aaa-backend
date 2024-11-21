@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Engineer = require("../models/engineer.model");
+const Complaint = require("../models/complaint.models");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -22,7 +23,7 @@ exports.adminLogin = async (userName, password) => {
     process.env.JWT_SECRET
   );
 
-  const { password:_, ...adminWithoutPassword } = admin.toObject();
+  const { password: _, ...adminWithoutPassword } = admin.toObject();
 
   return {
     admin: adminWithoutPassword,
@@ -33,7 +34,7 @@ exports.adminLogin = async (userName, password) => {
 
 exports.adminAddCustomer = async (userName, password, name, email) => {
   let existingCustomer = await Customer.findOne({
-    $or: [{ userName }, { email }]
+    $or: [{ userName }, { email }],
   });
   if (existingCustomer) {
     return {
@@ -55,13 +56,13 @@ exports.adminAddCustomer = async (userName, password, name, email) => {
     email,
     password: hashedPassword,
   });
-  const { password:_, ...customerWithoutPassword } = newCustomer.toObject();
+  const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
   return { customer: customerWithoutPassword, message: "Customer created" };
 };
 
 exports.adminAddEngineer = async (userName, password, name, email) => {
   let existingEngineer = await Engineer.findOne({
-    $or: [{ userName }, { email }]
+    $or: [{ userName }, { email }],
   });
   if (existingEngineer) {
     return {
@@ -83,6 +84,30 @@ exports.adminAddEngineer = async (userName, password, name, email) => {
     name,
     password: hashedPassword,
   });
-  const { password:_, ...engineerWithoutPassword } = newEngineer.toObject();
+  const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
   return { engineer: engineerWithoutPassword, message: "Engineer created" };
 };
+
+exports.adminGetAllComplaints = async () => {
+  const complaints = await Complaint.find({});
+  if (complaints.length == 0) {
+    return { complaints: null, message: "No complaints found" };
+  }
+  return { complaints, message: "All complaints fetched successfully" };
+};
+
+exports.adminGetAllTechnician = async () => {
+  const engineer = await Engineer.find({});
+  if (engineer.length == 0) {
+    return { engineer: null, message: "No complaints found" };
+  }
+  return { engineer, message: "All complaints fetched successfully" };
+};
+
+exports.getSingleComplaint = async (id) => {
+  const complaint = await Complaint.findById(id);
+  if (!complaint) {
+    return { complaint: null, message: "No complaint found" };
+  }
+  return { complaint, message: "Complaint retrieved successfully" };
+}
