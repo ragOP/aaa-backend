@@ -2,27 +2,41 @@ const mongoose = require("mongoose");
 
 const complaintSchema = new mongoose.Schema({
   customerId: {
-   type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Customer",
   },
   projectName: {
-   type: String,
+    type: String,
   },
   siteLocation: {
-   type: String,
+    type: String,
   },
   panelSectionName: {
-   type: String,
+    type: String,
   },
-  issueDescription:{
-   type: String,
+  issueDescription: {
+    type: String,
   },
-  images: [{
-   type: String,
-  }],
+  images: [
+    {
+      type: String,
+    },
+  ],
+  activity: {
+    type: String,
+    enum: ["Pending", "Ongoing", "Closed"],
+  },
+  technician: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Engineer",
+  },
+  statusCode: {
+    type: Number,
+  },
   severity: {
-   type: String,
-   enum: ["Low", "Medium", "High"],
-  }
+    type: String,
+    enum: ["Low", "Medium", "High"],
+  },
 });
 
 const Complaint = mongoose.model("Complaint", complaintSchema);

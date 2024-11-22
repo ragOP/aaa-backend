@@ -5,7 +5,10 @@ const {
   handleAddEngineer,
   handleGetAllComplaints,
   handleGetAllEngineer,
-  handleGetSingleComplaint
+  handleGetSingleComplaint,
+  handleAddTechnican,
+  handleGetTechnicanDetails,
+  handleGetCustomerDeatils
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -16,5 +19,8 @@ router.route("/addEngineer").post(admin, handleAddEngineer);
 router.route("/get-complaints").get(admin, handleGetAllComplaints);
 router.route("/get-engineers").get(admin, handleGetAllEngineer);
 router.route("/get-complaints/:id").get(admin, handleGetSingleComplaint);
+router.route("/add-technican/:complaintId").patch(admin, handleAddTechnican);
+router.route("/get-technican/:technicianId").get(admin, handleGetTechnicanDetails);
+router.route("/get-customer/:customerId").get(admin, handleGetCustomerDeatils);
 
 module.exports = router;

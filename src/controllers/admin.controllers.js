@@ -7,6 +7,9 @@ const {
   adminGetAllTechnician,
   adminGetAllComplaints,
   getSingleComplaint,
+  adminAddTechnician,
+  getTechnicianDetails,
+  getCustomerDetails,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -28,12 +31,16 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddCustomer = asyncHandler(async (req, res) => {
-  const { userName, password, email, name } = req.body;
+  const { userName, password, email, name, address, gst, contactPerson } =
+    req.body;
   const { customer, message } = await adminAddCustomer(
     userName,
     password,
     name,
-    email
+    email,
+    address,
+    gst,
+    contactPerson
   );
 
   if (!customer) {
@@ -50,12 +57,13 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddEngineer = asyncHandler(async (req, res) => {
-  const { userName, password, email, name } = req.body;
+  const { userName, password, email, name, employeeId } = req.body;
   const { engineer, message } = await adminAddEngineer(
     userName,
     password,
     name,
-    email
+    email,
+    employeeId
   );
 
   if (!engineer) {
@@ -105,10 +113,10 @@ exports.handleGetAllEngineer = asyncHandler(async (req, res) => {
     );
 });
 
-exports.handleGetSingleComplaint = asyncHandler (async (req, res) => {
+exports.handleGetSingleComplaint = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const {complaint, message } = await getSingleComplaint(id);
+  const { complaint, message } = await getSingleComplaint(id);
 
   if (!complaint) {
     return res.status(404).json(
@@ -118,7 +126,66 @@ exports.handleGetSingleComplaint = asyncHandler (async (req, res) => {
     );
   }
 
-  return res.status(200).json(
-    new ApiResponse(200, { complaint }, "Complaint retrieved successfully")
-  );
-})
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { complaint }, "Complaint retrieved successfully")
+    );
+});
+
+exports.handleAddTechnican = asyncHandler(async (req, res) => {
+  const { technicianId } = req.body;
+  const { complaintId } = req.params;
+
+  const { message } = await adminAddTechnician(complaintId, technicianId);
+
+  if (!message) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message,
+      })
+    );
+  }
+
+  return res.status(201).json(new ApiResponse(201, { message }, message));
+});
+
+exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
+  const { technicianId } = req.params;
+
+  const { technician, message } = await getTechnicianDetails(technicianId);
+
+  if (!technician) {
+    return res.status(404).json(
+      new ApiResponse(404, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { technician }, "Technician retrieved successfully")
+    );
+});
+
+exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
+  const { customerId } = req.params;
+
+  const { customer, message } = await getCustomerDetails(customerId);
+
+  if (!customer) {
+    return res.status(404).json(
+      new ApiResponse(404, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { customer }, "Customer retrieved successfully")
+    );
+});
