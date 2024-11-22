@@ -13,10 +13,11 @@ exports.adminLogin = async (userName, password) => {
       admin: null,
       token: null,
       message: "No admin found with this credentials",
+      statusCode: 404,
     };
   }
   if (admin.password !== password) {
-    return { admin: null, token: null, message: "Wrong password" };
+    return { admin: null, token: null, message: "Wrong password", statusCode: 401 };
   }
 
   const token = jwt.sign(
@@ -30,6 +31,7 @@ exports.adminLogin = async (userName, password) => {
     admin: adminWithoutPassword,
     token,
     message: "Admin loggedIn successfully",
+    statusCode: 200,
   };
 };
 
@@ -49,12 +51,14 @@ exports.adminAddCustomer = async (
     return {
       customer: null,
       message: "Customer already exist.",
+      statusCode: 409,
     };
   }
   if (!password) {
     return {
       customer: null,
       message: "Password is required",
+      statusCode: 401
     };
   }
   const salt = await bcrypt.genSalt(10);
@@ -69,7 +73,7 @@ exports.adminAddCustomer = async (
     contactPerson,
   });
   const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
-  return { customer: customerWithoutPassword, message: "Customer created" };
+  return { customer: customerWithoutPassword, message: "Customer created", statusCode: 201 };
 };
 
 exports.adminAddEngineer = async (
@@ -86,12 +90,14 @@ exports.adminAddEngineer = async (
     return {
       engineer: null,
       message: "Engineer already exist",
+      statusCode: 409,
     };
   }
   if (!password) {
     return {
       customer: null,
       message: "Password is required",
+      statusCode: 401,
     };
   }
   const salt = await bcrypt.genSalt(10);
@@ -104,62 +110,62 @@ exports.adminAddEngineer = async (
     employeeId,
   });
   const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
-  return { engineer: engineerWithoutPassword, message: "Engineer created" };
+  return { engineer: engineerWithoutPassword, message: "Engineer created", statusCode: 201 };
 };
 
 exports.adminGetAllComplaints = async () => {
   const complaints = await Complaint.find({});
   if (complaints.length == 0) {
-    return { complaints: null, message: "No complaints found" };
+    return { complaints: null, message: "No complaints found", statusCode: 404 };
   }
-  return { complaints, message: "All complaints fetched successfully" };
+  return { complaints, message: "All complaints fetched successfully", statusCode: 200 };
 };
 
 exports.adminGetAllTechnician = async () => {
   const engineer = await Engineer.find({});
   if (engineer.length == 0) {
-    return { engineer: null, message: "No complaints found" };
+    return { engineer: null, message: "No complaints found", statusCode: 404 };
   }
-  return { engineer, message: "All complaints fetched successfully" };
+  return { engineer, message: "All complaints fetched successfully", statusCode: 200 };
 };
 
 exports.getSingleComplaint = async (id) => {
   const complaint = await Complaint.findById(id);
   if (!complaint) {
-    return { complaint: null, message: "No complaint found" };
+    return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
   const technicanId = complaint.technician;
   const technician = await Engineer.findById(technicanId).select("-password");
   complaint.technician = technician;
-  return { complaint, message: "Complaint retrieved successfully" };
+  return { complaint, message: "Complaint retrieved successfully", statusCode: 200 };
 };
 exports.adminAddTechnician = async (id, technicianId) => {
   const complaint = await Complaint.findById(id);
   if (!complaint) {
-    return { complaint: null, message: "No complaint found" };
+    return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
   const technician = await Engineer.findById(technicianId);
   if (!technician) {
-    return { technician: null, message: "No technician found" };
+    return { technician: null, message: "No technician found", statusCode: 404 };
   }
   complaint.technician = technicianId;
   complaint.statusCode = Math.floor(1000 + Math.random() * 9000);
   await complaint.save();
-  return { complaint, message: "Technician added successfully" };
+  return { complaint, message: "Technician added successfully", statusCode: 201 };
 };
 
 exports.getTechnicianDetails = async (technicianId) => {
   const technician = await Engineer.findById(technicianId).select("-password");
   if (!technician) {
-    return { technician: null, message: "No technician found" };
+    return { technician: null, message: "No technician found", statusCode: 404 };
   }
-  return { technician, message: "Technician retrieved successfully" };
+  return { technician, message: "Technician retrieved successfully", statusCode: 200 };
 };
 
 exports.getCustomerDetails = async (customerId) => {
   const customer = await Customer.findById(customerId).select("-password");
   if (!customer) {
-    return { customer: null, message: "No customer found" };
+    return { customer: null, message: "No customer found", statusCode: 404 };
   }
-  return { customer, message: "Customer retrieved successfully" };
+  return { customer, message: "Customer retrieved successfully", statusCode: 200 };
 };

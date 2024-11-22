@@ -15,25 +15,25 @@ const ApiResponse = require("../utils/ApiResponse");
 
 exports.handleAdminLogin = asyncHandler(async (req, res) => {
   const { userName, password } = req.body;
-  const { admin, token, message } = await adminLogin(userName, password);
+  const { admin, token, message, statusCode } = await adminLogin(userName, password);
 
   if (!admin) {
-    return res.status(200).json(
-      new ApiResponse(200, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(200)
-    .json(new ApiResponse(200, { token, user: admin }, message));
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { token, user: admin }, message));
 });
 
 exports.handleAddCustomer = asyncHandler(async (req, res) => {
   const { userName, password, email, name, address, gst, contactPerson } =
     req.body;
-  const { customer, message } = await adminAddCustomer(
+  const { customer, message, statusCode } = await adminAddCustomer(
     userName,
     password,
     name,
@@ -44,21 +44,21 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
   );
 
   if (!customer) {
-    return res.status(200).json(
-      new ApiResponse(200, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(201)
-    .json(new ApiResponse(201, { user: customer }, message));
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { user: customer }, message));
 });
 
 exports.handleAddEngineer = asyncHandler(async (req, res) => {
   const { userName, password, email, name, employeeId } = req.body;
-  const { engineer, message } = await adminAddEngineer(
+  const { engineer, message, statusCode } = await adminAddEngineer(
     userName,
     password,
     name,
@@ -67,69 +67,69 @@ exports.handleAddEngineer = asyncHandler(async (req, res) => {
   );
 
   if (!engineer) {
-    return res.status(200).json(
-      new ApiResponse(200, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(201)
-    .json(new ApiResponse(201, { user: engineer }, message));
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { user: engineer }, message));
 });
 
 exports.handleGetAllComplaints = asyncHandler(async (req, res) => {
-  const { complaints, message } = await adminGetAllComplaints();
+  const { complaints, message, statusCode } = await adminGetAllComplaints();
 
   if (!complaints) {
-    return res.status(404).json(
-      new ApiResponse(404, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(200)
+    .status(statusCode)
     .json(
-      new ApiResponse(200, { complaints }, "Complaints retrieved successfully")
+      new ApiResponse(statusCode, { complaints }, "Complaints retrieved successfully")
     );
 });
 
 exports.handleGetAllEngineer = asyncHandler(async (req, res) => {
-  const { engineer, message } = await adminGetAllTechnician();
+  const { engineer, message, statusCode } = await adminGetAllTechnician();
 
   if (!engineer) {
-    return res.status(404).json(
-      new ApiResponse(404, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(200)
+    .status(statusCode)
     .json(
-      new ApiResponse(200, { engineer }, "Engineer retrieved successfully")
+      new ApiResponse(statusCode, { engineer }, "Engineer retrieved successfully")
     );
 });
 
 exports.handleGetSingleComplaint = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const { complaint, message } = await getSingleComplaint(id);
+  const { complaint, message, statusCode } = await getSingleComplaint(id);
 
   if (!complaint) {
-    return res.status(404).json(
-      new ApiResponse(404, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(200)
+    .status(statusCode)
     .json(
-      new ApiResponse(200, { complaint }, "Complaint retrieved successfully")
+      new ApiResponse(statusCode, { complaint }, "Complaint retrieved successfully")
     );
 });
 
@@ -137,55 +137,55 @@ exports.handleAddTechnican = asyncHandler(async (req, res) => {
   const { technicianId } = req.body;
   const { complaintId } = req.params;
 
-  const { message } = await adminAddTechnician(complaintId, technicianId);
+  const { message, statusCode } = await adminAddTechnician(complaintId, technicianId);
 
   if (!message) {
-    return res.status(400).json(
-      new ApiResponse(400, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
-  return res.status(201).json(new ApiResponse(201, { message }, message));
+  return res.status(statusCode).json(new ApiResponse(statusCode, { message }, message));
 });
 
 exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
   const { technicianId } = req.params;
 
-  const { technician, message } = await getTechnicianDetails(technicianId);
+  const { technician, message, statusCode } = await getTechnicianDetails(technicianId);
 
   if (!technician) {
-    return res.status(404).json(
-      new ApiResponse(404, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(200)
+    .status(statusCode)
     .json(
-      new ApiResponse(200, { technician }, "Technician retrieved successfully")
+      new ApiResponse(statusCode, { technician }, "Technician retrieved successfully")
     );
 });
 
 exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
   const { customerId } = req.params;
 
-  const { customer, message } = await getCustomerDetails(customerId);
+  const { customer, message, statusCode } = await getCustomerDetails(customerId);
 
   if (!customer) {
-    return res.status(404).json(
-      new ApiResponse(404, {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
         message,
       })
     );
   }
 
   return res
-    .status(200)
+    .status(statusCode)
     .json(
-      new ApiResponse(200, { customer }, "Customer retrieved successfully")
+      new ApiResponse(statusCode, { customer }, "Customer retrieved successfully")
     );
 });
