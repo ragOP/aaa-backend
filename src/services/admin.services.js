@@ -135,9 +135,6 @@ exports.adminGetAllComplaints = async () => {
       statusCode: 404,
     };
   }
-  const customerId = complaints.map((item) => item.customerId);
-  const technicanId = complaints.map((item) => item.technician);
-
   const populatedComplaints = await Promise.all(
     complaints.map(async (complaint) => {
       const customerDetails = await Customer.findById(
@@ -147,9 +144,11 @@ exports.adminGetAllComplaints = async () => {
         complaint.technician
       ).select("-password");
 
+      console.log(customerDetails, technicianDetails);
+
       return {
         ...complaint.toObject(),
-        customer: customerDetails || null,
+        customerId: customerDetails || null,
         technician: technicianDetails || null,
       };
     })
@@ -179,7 +178,7 @@ exports.getSingleComplaint = async (id) => {
     return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
   const technicanId = complaint.technician;
-  const customerId = complaint.customerId;
+  let customerId = complaint.customerId;
   const technician = await Engineer.findById(technicanId).select("-password");
   const customer = await Customer.findById(customerId).select("-password");
   complaint.technician = technician;
