@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Complaint = require("../models/complaint.models");
-const { uploadMultipleFiles }  = require("../helper/cloudniary.uploads");
+const { uploadMultipleFiles, uploadVoiceNote }  = require("../helper/cloudniary.uploads");
 
 exports.customerLogin = async (userName, password) => {
   const customer = await Customer.findOne({ userName });
@@ -25,11 +25,12 @@ exports.customerLogin = async (userName, password) => {
   };
 };
 
-exports.createComplaint = async (customerId, complaintData, images) => {
+exports.createComplaint = async (customerId, complaintData, images, voiceNote) => {
   if(!images){
     return { complaint: null, message: "No images provided" };
   }
-  const uploadedUrls = await uploadMultipleFiles(images, 'uploads');
+  const uploadedUrls = await uploadMultipleFiles(images, 'complaints/images');
+  const uploadedAudioUrl = await uploadVoiceNote(voiceNote.path, 'complaints/voice_notes');
   const customer = await Customer.findById(customerId);
   if (!customer) {
     return { complaint: null, message: "Customer not found" };
@@ -38,6 +39,7 @@ exports.createComplaint = async (customerId, complaintData, images) => {
     customerId,
     ...complaintData,
     images: uploadedUrls,
+    voiceNote: uploadedAudioUrl,
   });
   return { complaint, messaage: "Comaplaint registered successfully" };
 }

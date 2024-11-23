@@ -26,7 +26,8 @@ exports.handleCustomerLogin = asyncHandler(async (req, res) => {
 exports.handleNewComplaint = asyncHandler(async (req, res) => {
   const { customerId } = req.params;
   const complaintData = req.body;
-  const images = req.files;
+  const images = req.files.images;
+  const voiceNote = req.files.voiceNote[0];
   if (!customerId || !complaintData) {
     return res
       .status(400)
@@ -35,7 +36,8 @@ exports.handleNewComplaint = asyncHandler(async (req, res) => {
   const { complaint, messaage } = await createComplaint(
     customerId,
     complaintData,
-    images
+    images,
+    voiceNote
   );
   if (!complaint) {
     return res.status(500).json(

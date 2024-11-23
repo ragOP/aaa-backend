@@ -38,6 +38,9 @@ const complaintSchema = new mongoose.Schema({
     type: String,
     enum: ["Low", "Medium", "High"],
   },
+  voiceNote: {
+    type: String,
+  }
 }, {timestamps: true});
 
 const Complaint = mongoose.model("Complaint", complaintSchema);
