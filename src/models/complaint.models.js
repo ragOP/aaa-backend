@@ -25,6 +25,7 @@ const complaintSchema = new mongoose.Schema({
   activity: {
     type: String,
     enum: ["Pending", "Ongoing", "Closed"],
+    default: "Pending",
   },
   technician: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,7 +38,7 @@ const complaintSchema = new mongoose.Schema({
     type: String,
     enum: ["Low", "Medium", "High"],
   },
-});
+}, {timestamps: true});
 
 const Complaint = mongoose.model("Complaint", complaintSchema);
 module.exports = Complaint;

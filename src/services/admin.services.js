@@ -17,7 +17,12 @@ exports.adminLogin = async (userName, password) => {
     };
   }
   if (admin.password !== password) {
-    return { admin: null, token: null, message: "Wrong password", statusCode: 401 };
+    return {
+      admin: null,
+      token: null,
+      message: "Wrong password",
+      statusCode: 401,
+    };
   }
 
   const token = jwt.sign(
@@ -58,7 +63,7 @@ exports.adminAddCustomer = async (
     return {
       customer: null,
       message: "Password is required",
-      statusCode: 401
+      statusCode: 401,
     };
   }
   const salt = await bcrypt.genSalt(10);
@@ -73,7 +78,11 @@ exports.adminAddCustomer = async (
     contactPerson,
   });
   const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
-  return { customer: customerWithoutPassword, message: "Customer created", statusCode: 201 };
+  return {
+    customer: customerWithoutPassword,
+    message: "Customer created",
+    statusCode: 201,
+  };
 };
 
 exports.adminAddEngineer = async (
@@ -110,15 +119,46 @@ exports.adminAddEngineer = async (
     employeeId,
   });
   const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
-  return { engineer: engineerWithoutPassword, message: "Engineer created", statusCode: 201 };
+  return {
+    engineer: engineerWithoutPassword,
+    message: "Engineer created",
+    statusCode: 201,
+  };
 };
 
 exports.adminGetAllComplaints = async () => {
   const complaints = await Complaint.find({});
   if (complaints.length == 0) {
-    return { complaints: null, message: "No complaints found", statusCode: 404 };
+    return {
+      complaints: null,
+      message: "No complaints found",
+      statusCode: 404,
+    };
   }
-  return { complaints, message: "All complaints fetched successfully", statusCode: 200 };
+  const customerId = complaints.map((item) => item.customerId);
+  const technicanId = complaints.map((item) => item.technician);
+
+  const populatedComplaints = await Promise.all(
+    complaints.map(async (complaint) => {
+      const customerDetails = await Customer.findById(
+        complaint.customerId
+      ).select("-password");
+      const technicianDetails = await Engineer.findById(
+        complaint.technician
+      ).select("-password");
+
+      return {
+        ...complaint.toObject(),
+        customer: customerDetails || null,
+        technician: technicianDetails || null,
+      };
+    })
+  );
+  return {
+    complaints: populatedComplaints,
+    message: "All complaints fetched successfully",
+    statusCode: 200,
+  };
 };
 
 exports.adminGetAllTechnician = async () => {
@@ -126,7 +166,11 @@ exports.adminGetAllTechnician = async () => {
   if (engineer.length == 0) {
     return { engineer: null, message: "No complaints found", statusCode: 404 };
   }
-  return { engineer, message: "All complaints fetched successfully", statusCode: 200 };
+  return {
+    engineer,
+    message: "All complaints fetched successfully",
+    statusCode: 200,
+  };
 };
 
 exports.getSingleComplaint = async (id) => {
@@ -135,9 +179,16 @@ exports.getSingleComplaint = async (id) => {
     return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
   const technicanId = complaint.technician;
+  const customerId = complaint.customerId;
   const technician = await Engineer.findById(technicanId).select("-password");
+  const customer = await Customer.findById(customerId).select("-password");
   complaint.technician = technician;
-  return { complaint, message: "Complaint retrieved successfully", statusCode: 200 };
+  complaint.customerId = customer;
+  return {
+    complaint,
+    message: "Complaint retrieved successfully",
+    statusCode: 200,
+  };
 };
 exports.adminAddTechnician = async (id, technicianId) => {
   const complaint = await Complaint.findById(id);
@@ -146,20 +197,36 @@ exports.adminAddTechnician = async (id, technicianId) => {
   }
   const technician = await Engineer.findById(technicianId);
   if (!technician) {
-    return { technician: null, message: "No technician found", statusCode: 404 };
+    return {
+      technician: null,
+      message: "No technician found",
+      statusCode: 404,
+    };
   }
   complaint.technician = technicianId;
   complaint.statusCode = Math.floor(1000 + Math.random() * 9000);
   await complaint.save();
-  return { complaint, message: "Technician added successfully", statusCode: 201 };
+  return {
+    complaint,
+    message: "Technician added successfully",
+    statusCode: 201,
+  };
 };
 
 exports.getTechnicianDetails = async (technicianId) => {
   const technician = await Engineer.findById(technicianId).select("-password");
   if (!technician) {
-    return { technician: null, message: "No technician found", statusCode: 404 };
+    return {
+      technician: null,
+      message: "No technician found",
+      statusCode: 404,
+    };
   }
-  return { technician, message: "Technician retrieved successfully", statusCode: 200 };
+  return {
+    technician,
+    message: "Technician retrieved successfully",
+    statusCode: 200,
+  };
 };
 
 exports.getCustomerDetails = async (customerId) => {
@@ -167,5 +234,31 @@ exports.getCustomerDetails = async (customerId) => {
   if (!customer) {
     return { customer: null, message: "No customer found", statusCode: 404 };
   }
-  return { customer, message: "Customer retrieved successfully", statusCode: 200 };
+  return {
+    customer,
+    message: "Customer retrieved successfully",
+    statusCode: 200,
+  };
+};
+
+exports.getAllDashboardStats = async () => {
+  const totalComplaints = await Complaint.countDocuments();
+  const complaintsByActivity = await Complaint.aggregate([
+    { $group: { _id: "$activity", count: { $sum: 1 } } },
+  ]);
+  const complaintsBySeverity = await Complaint.aggregate([
+    { $group: { _id: "$severity", count: { $sum: 1 } } },
+  ]);
+
+  const stats = {
+    totalComplaints,
+    complaintsByActivity,
+    complaintsBySeverity,
+  };
+
+  return {
+    stats,
+    message: "Dashboard stats retrieved successfully",
+    statusCode: 200,
+  };
 };

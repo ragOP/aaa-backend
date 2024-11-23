@@ -10,12 +10,16 @@ const {
   adminAddTechnician,
   getTechnicianDetails,
   getCustomerDetails,
+  getAllDashboardStats,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
 exports.handleAdminLogin = asyncHandler(async (req, res) => {
   const { userName, password } = req.body;
-  const { admin, token, message, statusCode } = await adminLogin(userName, password);
+  const { admin, token, message, statusCode } = await adminLogin(
+    userName,
+    password
+  );
 
   if (!admin) {
     return res.status(statusCode).json(
@@ -92,7 +96,11 @@ exports.handleGetAllComplaints = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { complaints }, "Complaints retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { complaints },
+        "Complaints retrieved successfully"
+      )
     );
 });
 
@@ -109,7 +117,11 @@ exports.handleGetAllEngineer = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { engineer }, "Engineer retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { engineer },
+        "Engineer retrieved successfully"
+      )
     );
 });
 
@@ -129,7 +141,11 @@ exports.handleGetSingleComplaint = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { complaint }, "Complaint retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { complaint },
+        "Complaint retrieved successfully"
+      )
     );
 });
 
@@ -137,7 +153,10 @@ exports.handleAddTechnican = asyncHandler(async (req, res) => {
   const { technicianId } = req.body;
   const { complaintId } = req.params;
 
-  const { message, statusCode } = await adminAddTechnician(complaintId, technicianId);
+  const { message, statusCode } = await adminAddTechnician(
+    complaintId,
+    technicianId
+  );
 
   if (!message) {
     return res.status(statusCode).json(
@@ -147,13 +166,17 @@ exports.handleAddTechnican = asyncHandler(async (req, res) => {
     );
   }
 
-  return res.status(statusCode).json(new ApiResponse(statusCode, { message }, message));
+  return res
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { message }, message));
 });
 
 exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
   const { technicianId } = req.params;
 
-  const { technician, message, statusCode } = await getTechnicianDetails(technicianId);
+  const { technician, message, statusCode } = await getTechnicianDetails(
+    technicianId
+  );
 
   if (!technician) {
     return res.status(statusCode).json(
@@ -166,14 +189,20 @@ exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { technician }, "Technician retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { technician },
+        "Technician retrieved successfully"
+      )
     );
 });
 
 exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
   const { customerId } = req.params;
 
-  const { customer, message, statusCode } = await getCustomerDetails(customerId);
+  const { customer, message, statusCode } = await getCustomerDetails(
+    customerId
+  );
 
   if (!customer) {
     return res.status(statusCode).json(
@@ -186,6 +215,26 @@ exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { customer }, "Customer retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { customer },
+        "Customer retrieved successfully"
+      )
+    );
+});
+
+exports.handleGetDashboardStats = asyncHandler(async (req, res) => {
+  const { stats, message, statusCode } = await getAllDashboardStats();
+  if (!stats) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+  return res
+    .status(statusCode)
+    .json(
+      new ApiResponse(statusCode, { stats }, "Stats retrieved successfully")
     );
 });
