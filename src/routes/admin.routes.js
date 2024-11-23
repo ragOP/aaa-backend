@@ -9,7 +9,8 @@ const {
   handleAddTechnican,
   handleGetTechnicanDetails,
   handleGetCustomerDeatils,
-  handleGetDashboardStats
+  handleGetDashboardStats,
+  handleGetAllCustomers
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -24,5 +25,6 @@ router.route("/add-technican/:complaintId").patch(admin, handleAddTechnican);
 router.route("/get-technican/:technicianId").get(admin, handleGetTechnicanDetails);
 router.route("/get-customer/:customerId").get(admin, handleGetCustomerDeatils);
 router.route("/get-stats/").get(admin, handleGetDashboardStats);
+router.route("/get-customers/").get(admin, handleGetAllCustomers);
 
 module.exports = router;

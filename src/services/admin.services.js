@@ -261,3 +261,15 @@ exports.getAllDashboardStats = async () => {
     statusCode: 200,
   };
 };
+
+exports.getAllCustomers = async () => {
+  const customers = await Customer.find({});
+  if (customers.length == 0) {
+    return { customers: null, message: "No customers found", statusCode: 404 };
+  }
+  return {
+    customers,
+    message: "All customers fetched successfully",
+    statusCode: 200,
+  };
+}

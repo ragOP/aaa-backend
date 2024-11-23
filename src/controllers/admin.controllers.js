@@ -11,6 +11,7 @@ const {
   getTechnicianDetails,
   getCustomerDetails,
   getAllDashboardStats,
+  getAllCustomers,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -238,3 +239,19 @@ exports.handleGetDashboardStats = asyncHandler(async (req, res) => {
       new ApiResponse(statusCode, { stats }, "Stats retrieved successfully")
     );
 });
+
+exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
+  const { customers, message, statusCode } = await getAllCustomers();
+  if (!customers) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+  return res
+    .status(statusCode)
+    .json(
+      new ApiResponse(statusCode, { customers }, "Customers retrieved successfully")
+    );
+})
