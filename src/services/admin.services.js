@@ -89,7 +89,8 @@ exports.adminAddEngineer = async (
   password,
   name,
   email,
-  employeeId
+  employeeId,
+  phoneNumber
 ) => {
   let existingEngineer = await Engineer.findOne({
     $or: [{ userName }, { email }],
@@ -116,6 +117,7 @@ exports.adminAddEngineer = async (
     name,
     password: hashedPassword,
     employeeId,
+    phoneNumber
   });
   const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
   return {
@@ -126,7 +128,7 @@ exports.adminAddEngineer = async (
 };
 
 exports.adminGetAllComplaints = async () => {
-  const complaints = await Complaint.find({});
+  const complaints = await Complaint.find({}).sort({createdAt: -1});
   if (complaints.length == 0) {
     return {
       complaints: null,

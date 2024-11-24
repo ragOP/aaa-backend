@@ -75,7 +75,7 @@ exports.createComplaint = async (
 };
 
 exports.getMyComplaint = async (customerId) => {
-  const complaints = await Complaint.find({ customerId });
+  const complaints = await Complaint.find({ customerId }).sort({ createdAt: -1 });
   if (complaints.length == 0) {
     return { complaint: null, message: "No complaint found", statusCode: 404 };
   }

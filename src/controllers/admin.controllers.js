@@ -62,13 +62,14 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddEngineer = asyncHandler(async (req, res) => {
-  const { userName, password, email, name, employeeId } = req.body;
+  const { userName, password, email, name, employeeId, phoneNumber } = req.body;
   const { engineer, message, statusCode } = await adminAddEngineer(
     userName,
     password,
     name,
     email,
-    employeeId
+    employeeId,
+    phoneNumber
   );
 
   if (!engineer) {

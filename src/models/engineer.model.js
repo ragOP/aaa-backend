@@ -17,6 +17,10 @@ const engineerSchema = new mongoose.Schema({
   type: String,
   required: true,
  },
+ phoneNumber: {
+  type: String,
+  required: true,
+ },
  employeeId: {
   type: String,
   required: true,
