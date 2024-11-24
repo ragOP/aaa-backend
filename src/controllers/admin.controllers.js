@@ -252,6 +252,10 @@ exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(
-      new ApiResponse(statusCode, { customers }, "Customers retrieved successfully")
+      new ApiResponse(
+        statusCode,
+        { customers },
+        "Customers retrieved successfully"
+      )
     );
-})
+});

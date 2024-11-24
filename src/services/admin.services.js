@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Engineer = require("../models/engineer.model");
 const Complaint = require("../models/complaint.models");
-const { asyncHandler } = require("../common/asyncHandler");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -272,4 +271,4 @@ exports.getAllCustomers = async () => {
     message: "All customers fetched successfully",
     statusCode: 200,
   };
-}
+};

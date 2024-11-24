@@ -2,17 +2,30 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Complaint = require("../models/complaint.models");
-const { uploadMultipleFiles, uploadVoiceNote }  = require("../helper/cloudniary.uploads");
+const {
+  uploadMultipleFiles,
+  uploadVoiceNote,
+} = require("../helper/cloudniary.uploads");
 const Engineer = require("../models/engineer.model");
 
 exports.customerLogin = async (userName, password) => {
   const customer = await Customer.findOne({ userName });
   if (!customer) {
-    return { customer: null, token: null, message: "No user found", statusCode: 404 };
+    return {
+      customer: null,
+      token: null,
+      message: "No user found",
+      statusCode: 404,
+    };
   }
   const comparePassword = await bcrypt.compare(password, customer.password);
   if (!comparePassword) {
-    return { customer: null, token: null, message: "Password is not correct", statusCode: 401 };
+    return {
+      customer: null,
+      token: null,
+      message: "Password is not correct",
+      statusCode: 401,
+    };
   }
   const { password: _, ...customerWithoutPassword } = customer.toObject();
   const token = jwt.sign(
@@ -27,12 +40,23 @@ exports.customerLogin = async (userName, password) => {
   };
 };
 
-exports.createComplaint = async (customerId, complaintData, images, voiceNote) => {
-  if(!images){
+exports.createComplaint = async (
+  customerId,
+  complaintData,
+  images,
+  voiceNote
+) => {
+  if (!images) {
     return { complaint: null, message: "No images provided", statusCode: 404 };
   }
-  const uploadedUrls = await uploadMultipleFiles(images, 'complaints/images');
-  const uploadedAudioUrl = await uploadVoiceNote(voiceNote.path, 'complaints/voice_notes');
+  const uploadedUrls = await uploadMultipleFiles(images, "complaints/images");
+  let uploadedAudioUrl = "";
+  if(voiceNote){
+     uploadedAudioUrl = await uploadVoiceNote(
+      voiceNote.path,
+      "complaints/voice_notes"
+    );
+  }
   const customer = await Customer.findById(customerId);
   if (!customer) {
     return { complaint: null, message: "Customer not found", statusCode: 404 };
@@ -43,8 +67,12 @@ exports.createComplaint = async (customerId, complaintData, images, voiceNote) =
     images: uploadedUrls,
     voiceNote: uploadedAudioUrl,
   });
-  return { complaint, messaage: "Comaplaint registered successfully", statusCode: 201 };
-}
+  return {
+    complaint,
+    messaage: "Comaplaint registered successfully",
+    statusCode: 201,
+  };
+};
 
 exports.getMyComplaint = async (customerId) => {
   const complaints = await Complaint.find({ customerId });
@@ -66,5 +94,9 @@ exports.getMyComplaint = async (customerId) => {
       };
     })
   );
-  return { complaints: populatedComplaints, messaage: "Complaint retrieved successfully", statusCode: 200 };
-}
+  return {
+    complaints: populatedComplaints,
+    messaage: "Complaint retrieved successfully",
+    statusCode: 200,
+  };
+};
