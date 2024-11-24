@@ -51,8 +51,8 @@ exports.createComplaint = async (
   }
   const uploadedUrls = await uploadMultipleFiles(images, "complaints/images");
   let uploadedAudioUrl = "";
-  if(voiceNote){
-     uploadedAudioUrl = await uploadVoiceNote(
+  if (voiceNote) {
+    uploadedAudioUrl = await uploadVoiceNote(
       voiceNote.path,
       "complaints/voice_notes"
     );
@@ -75,7 +75,9 @@ exports.createComplaint = async (
 };
 
 exports.getMyComplaint = async (customerId) => {
-  const complaints = await Complaint.find({ customerId }).sort({ createdAt: -1 });
+  const complaints = await Complaint.find({ customerId }).sort({
+    createdAt: -1,
+  });
   if (complaints.length == 0) {
     return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
@@ -97,6 +99,31 @@ exports.getMyComplaint = async (customerId) => {
   return {
     complaints: populatedComplaints,
     messaage: "Complaint retrieved successfully",
+    statusCode: 200,
+  };
+};
+
+exports.raisePriority = async (complaintId) => {
+  const complaint = await Complaint.findById(complaintId);
+  const severity = complaint.severity;
+  if (severity === "Low") {
+    complaint.severity = "Medium";
+  } else if (severity === "Medium") {
+    complaint.severity = "High";
+  } else {
+    return {
+      complaint: null,
+      messaage: "Priority Alredy High",
+      statusCode: 400,
+    };
+  }
+  await complaint.save();
+  if (!complaint) {
+    return { complaint: null, message: "No complaint found", statusCode: 404 };
+  }
+  return {
+    complaint,
+    messaage: "Priority raised successfully",
     statusCode: 200,
   };
 };

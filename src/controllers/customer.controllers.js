@@ -3,6 +3,7 @@ const {
   customerLogin,
   createComplaint,
   getMyComplaint,
+  raisePriority,
 } = require("../services/customer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -31,7 +32,7 @@ exports.handleNewComplaint = asyncHandler(async (req, res) => {
   const complaintData = req.body;
   const images = req.files.images;
   const voiceNote = req?.files?.voiceNote ? req.files.voiceNote[0] : null;
-  console.log(voiceNote, 'voice note');
+  console.log(voiceNote, "voice note");
   if (!customerId || !complaintData) {
     return res
       .status(400)
@@ -73,4 +74,25 @@ exports.handleGetMyComplaint = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(new ApiResponse(statusCode, { data: complaints }, messaage));
+});
+
+exports.handleRaisePriority = asyncHandler(async (req, res) => {
+  const { complaintId } = req.params;
+  if (!complaintId) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, { messaage: "Please Provide Complaint Id" }));
+  }
+  const { complaint, messaage, statusCode } = await raisePriority(complaintId);
+  console.log(messaage);
+  if (!complaint) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { data: complaint }, messaage));
 });
