@@ -138,3 +138,20 @@ exports.getMyDetails = async (id) => {
     statusCode: 200,
   };
 }
+exports.getSingleComplaint = async (id) => {
+  const complaint = await Complaint.findById(id);
+  if (!complaint) {
+    return { complaint: null, message: "No complaint found", statusCode: 404 };
+  }
+  const customerDetails = await Customer.findById(
+    complaint.customerId
+  ).select("-password");
+  const technicianDetails = await Engineer.findById(
+    complaint.technician
+  ).select("-password");
+  return {
+    complaint: {...complaint.toObject(), customerId: customerDetails, technician: technicianDetails },
+    messaage: "Complaint retrieved successfully",
+    statusCode: 200,
+  };
+}

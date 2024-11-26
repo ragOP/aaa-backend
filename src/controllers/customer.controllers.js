@@ -5,6 +5,7 @@ const {
   getMyComplaint,
   raisePriority,
   getMyDetails,
+  getSingleComplaint,
 } = require("../services/customer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -116,4 +117,25 @@ exports.handleGetMyDetails = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(new ApiResponse(statusCode, { data: customer }, messaage));
+})
+exports.handleSingleComplaint = asyncHandler(async (req, res) => {
+  const { complaintId } = req.params;
+  if (!complaintId) {
+    return res
+     .status(400)
+     .json(new ApiResponse(400, { messaage: "Please Provide Complaint Id" }));
+  }
+  const { complaint, messaage, statusCode } = await getSingleComplaint(
+    complaintId
+  );
+  if (!complaint) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+   .status(statusCode)
+   .json(new ApiResponse(statusCode, { data: complaint }, messaage));
 })
