@@ -4,6 +4,7 @@ const {
   createComplaint,
   getMyComplaint,
   raisePriority,
+  getMyDetails,
 } = require("../services/customer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -96,3 +97,23 @@ exports.handleRaisePriority = asyncHandler(async (req, res) => {
     .status(statusCode)
     .json(new ApiResponse(statusCode, { data: complaint }, messaage));
 });
+
+exports.handleGetMyDetails = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  if (!_id) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, { messaage: "No User Id Found" }));
+  }
+  const { customer, messaage, statusCode } = await getMyDetails(_id);
+  if (!customer) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { data: customer }, messaage));
+})

@@ -6,6 +6,7 @@ const {
   handleNewComplaint,
   handleGetMyComplaint,
   handleRaisePriority,
+  handleGetMyDetails,
 } = require("../controllers/customer.controllers");
 const { customer } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -22,5 +23,6 @@ router.route("/new-complaint/:customerId").post(
 );
 router.route("/my-complaint/:customerId").get(customer, handleGetMyComplaint);
 router.route("/raise-priorty/:complaintId").patch(customer, handleRaisePriority);
+router.route("/get-user/").get(customer, handleGetMyDetails);
 
 module.exports = router;

@@ -64,7 +64,7 @@ const customer = async (req, res, next) => {
         .status(400)
         .json({ message: "You are not logged in. Please login to get access" });
     }
-    const customer = await Customer.find({ _id: data.id });
+    const customer = await Customer.findOne({ _id: data.id });
     if (!customer) {
       return res
         .status(400)

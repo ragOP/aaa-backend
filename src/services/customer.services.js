@@ -127,3 +127,14 @@ exports.raisePriority = async (complaintId) => {
     statusCode: 200,
   };
 };
+exports.getMyDetails = async (id) => {
+  const customer = await Customer.findById(id).select("-password");
+  if (!customer) {
+    return { customer: null, message: "No customer found", statusCode: 404 };
+  }
+  return {
+    customer,
+    messaage: "Customer details retrieved successfully",
+    statusCode: 200,
+  };
+}
