@@ -12,6 +12,7 @@ const {
   getCustomerDetails,
   getAllDashboardStats,
   getAllCustomers,
+  addProject,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -260,3 +261,20 @@ exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
       )
     );
 });
+
+exports.handleAddProject = asyncHandler(async (req, res) => {
+  const { title, panels, customerId } = req.body;
+  const { project, message, statusCode } = await addProject(customerId, title, panels);
+
+  if (!project) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+   .status(statusCode)
+   .json(new ApiResponse(statusCode, { project }, message));
+})

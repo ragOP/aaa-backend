@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const Customer = require("../models/customer.models");
 const Engineer = require("../models/engineer.model");
 const Complaint = require("../models/complaint.models");
+const Project = require("../models/project.models");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -117,7 +118,7 @@ exports.adminAddEngineer = async (
     name,
     password: hashedPassword,
     employeeId,
-    phoneNumber
+    phoneNumber,
   });
   const { password: _, ...engineerWithoutPassword } = newEngineer.toObject();
   return {
@@ -128,7 +129,7 @@ exports.adminAddEngineer = async (
 };
 
 exports.adminGetAllComplaints = async () => {
-  const complaints = await Complaint.find({}).sort({createdAt: -1});
+  const complaints = await Complaint.find({}).sort({ createdAt: -1 });
   if (complaints.length == 0) {
     return {
       complaints: null,
@@ -272,5 +273,27 @@ exports.getAllCustomers = async () => {
     customers,
     message: "All customers fetched successfully",
     statusCode: 200,
+  };
+};
+
+exports.addProject = async (id, title, panels) => {
+  const customer = await Customer.findById(id).select("-password");
+  if (!customer) {
+    return { engineer: null, message: "No Customer found", statusCode: 404 };
+  }
+  const project = await Project.create({
+    customerId: id,
+    title,
+    panels,
+  });
+
+  const newProject = {
+    ...project.toObject(),
+    customerId: customer,
+  };
+  return {
+    project: newProject,
+    message: "Project added successfully",
+    statusCode: 201,
   };
 };
