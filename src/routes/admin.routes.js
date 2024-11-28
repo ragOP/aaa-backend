@@ -11,7 +11,8 @@ const {
   handleGetCustomerDeatils,
   handleGetDashboardStats,
   handleGetAllCustomers,
-  handleAddProject
+  handleAddProject,
+  handleGetAllProjects
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -28,5 +29,6 @@ router.route("/get-customer/:customerId").get(admin, handleGetCustomerDeatils);
 router.route("/get-stats/").get(admin, handleGetDashboardStats);
 router.route("/get-customers/").get(admin, handleGetAllCustomers);
 router.route("/add-project/").post(admin, handleAddProject);
+router.route("/get-project/").get(admin, handleGetAllProjects);
 
 module.exports = router;

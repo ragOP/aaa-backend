@@ -13,6 +13,7 @@ const {
   getAllDashboardStats,
   getAllCustomers,
   addProject,
+  getAllProjects,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -277,4 +278,20 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   return res
    .status(statusCode)
    .json(new ApiResponse(statusCode, { project }, message));
+})
+
+exports.handleGetAllProjects = asyncHandler(async (req, res) => {
+  const { projects, message, statusCode } = await getAllProjects();
+
+  if (!projects) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+   .status(statusCode)
+   .json(new ApiResponse(statusCode, { projects }, message));
 })

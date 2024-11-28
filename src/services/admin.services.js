@@ -297,3 +297,26 @@ exports.addProject = async (id, title, panels) => {
     statusCode: 201,
   };
 };
+
+exports.getAllProjects = async () => {
+  const projects = await Project.find({});
+  if (projects.length == 0) {
+    return { projects: null, message: "No projects found", statusCode: 404 };
+  }
+  const populatedProjects = await Promise.all(
+    projects.map(async (project) => {
+      const customerDetails = await Customer.findById(
+        project.customerId
+      ).select("-password");
+      return {
+       ...project.toObject(),
+        customerId: customerDetails || null,
+      };
+    })
+  );
+  return {
+    projects: populatedProjects,
+    message: "All projects fetched successfully",
+    statusCode: 200,
+  };
+}
