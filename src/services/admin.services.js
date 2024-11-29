@@ -320,3 +320,19 @@ exports.getAllProjects = async () => {
     statusCode: 200,
   };
 }
+
+exports.getSingleProject = async (id) => {
+  const project = await Project.findById(id);
+  if (!project) {
+    return { project: null, message: "No project found", statusCode: 404 };
+  }
+  const customerDetails = await Customer.findById(
+    project.customerId
+  ).select("-password");
+  project.customerId = customerDetails;
+  return {
+    project,
+    message: "Project retrieved successfully",
+    statusCode: 200,
+  };
+}

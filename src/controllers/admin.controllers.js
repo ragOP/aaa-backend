@@ -14,6 +14,7 @@ const {
   getAllCustomers,
   addProject,
   getAllProjects,
+  getSingleProject,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -294,4 +295,23 @@ exports.handleGetAllProjects = asyncHandler(async (req, res) => {
   return res
    .status(statusCode)
    .json(new ApiResponse(statusCode, { projects }, message));
+})
+exports.handleGetSingleProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+     .status(400)
+     .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+  }
+  const { project, messaage, statusCode } = await getSingleProject(id);
+  if (!project) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+   .status(statusCode)
+   .json(new ApiResponse(statusCode, { data: project }, messaage));
 })
