@@ -28,6 +28,10 @@ const customerSchema = new mongoose.Schema({
  contactPerson: {
   type: String,
   required: true,
+ },
+ phoneNumber: {
+  type: String,
+  required: true,
  }
 }, {timestamps: true})
 

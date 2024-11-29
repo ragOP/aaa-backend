@@ -47,7 +47,8 @@ exports.adminAddCustomer = async (
   email,
   address,
   gst,
-  contactPerson
+  contactPerson,
+  phoneNumber
 ) => {
   let existingCustomer = await Customer.findOne({
     $or: [{ userName }, { email }],
@@ -76,6 +77,7 @@ exports.adminAddCustomer = async (
     address,
     gst,
     contactPerson,
+    phoneNumber
   });
   const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
   return {
@@ -244,6 +246,8 @@ exports.getCustomerDetails = async (customerId) => {
 
 exports.getAllDashboardStats = async () => {
   const totalComplaints = await Complaint.countDocuments();
+  const totalProjects = await Project.countDocuments();
+  const totalEngineers = await Engineer.countDocuments();
   const complaintsByActivity = await Complaint.aggregate([
     { $group: { _id: "$activity", count: { $sum: 1 } } },
   ]);
@@ -255,6 +259,8 @@ exports.getAllDashboardStats = async () => {
     totalComplaints,
     complaintsByActivity,
     complaintsBySeverity,
+    totalEngineers,
+    totalProjects
   };
 
   return {

@@ -39,7 +39,7 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddCustomer = asyncHandler(async (req, res) => {
-  const { userName, password, email, name, address, gst, contactPerson } =
+  const { userName, password, email, name, address, gst, contactPerson, phoneNumber } =
     req.body;
   const { customer, message, statusCode } = await adminAddCustomer(
     userName,
@@ -48,7 +48,8 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
     email,
     address,
     gst,
-    contactPerson
+    contactPerson,
+    phoneNumber
   );
 
   if (!customer) {
