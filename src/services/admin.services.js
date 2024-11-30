@@ -282,7 +282,7 @@ exports.getAllCustomers = async () => {
   };
 };
 
-exports.addProject = async (id, title, panels) => {
+exports.addProject = async (id, title, panels, siteLocation, activity) => {
   const customer = await Customer.findById(id).select("-password");
   if (!customer) {
     return { engineer: null, message: "No Customer found", statusCode: 404 };
@@ -291,6 +291,8 @@ exports.addProject = async (id, title, panels) => {
     customerId: id,
     title,
     panels,
+    siteLocation,
+    activity,
   });
 
   const newProject = {

@@ -6,6 +6,7 @@ const {
   raisePriority,
   getMyDetails,
   getSingleComplaint,
+  getAllProjects,
 } = require("../services/customer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -138,4 +139,23 @@ exports.handleSingleComplaint = asyncHandler(async (req, res) => {
   return res
    .status(statusCode)
    .json(new ApiResponse(statusCode, { data: complaint }, messaage));
+})
+exports.handleAllGetProjects = asyncHandler(async(req, res) => {
+  const { _id } = req.user
+  if (!_id) {
+    return res
+     .status(400)
+     .json(new ApiResponse(400, { messaage: "Please Provide Customer Id" }));
+  }
+  const { projects, messaage, statusCode } = await getAllProjects(_id);
+  if (!projects) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+   .status(statusCode)
+   .json(new ApiResponse(statusCode, { data: projects }, messaage));
 })

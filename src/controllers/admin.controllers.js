@@ -266,8 +266,8 @@ exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddProject = asyncHandler(async (req, res) => {
-  const { title, panels, customerId } = req.body;
-  const { project, message, statusCode } = await addProject(customerId, title, panels);
+  const { title, panels, customerId, siteLocation, activity } = req.body;
+  const { project, message, statusCode } = await addProject(customerId, title, panels, siteLocation, activity);
 
   if (!project) {
     return res.status(statusCode).json(

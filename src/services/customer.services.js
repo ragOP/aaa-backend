@@ -7,6 +7,7 @@ const {
   uploadVoiceNote,
 } = require("../helper/cloudniary.uploads");
 const Engineer = require("../models/engineer.model");
+const Project = require("../models/project.models");
 
 exports.customerLogin = async (userName, password) => {
   const customer = await Customer.findOne({ userName });
@@ -152,6 +153,18 @@ exports.getSingleComplaint = async (id) => {
   return {
     complaint: {...complaint.toObject(), customerId: customerDetails, technician: technicianDetails },
     messaage: "Complaint retrieved successfully",
+    statusCode: 200,
+  };
+}
+
+exports.getAllProjects = async (customerId) => {
+  const projects = await Project.find({ customerId });
+  if (projects.length == 0) {
+    return { complaint: null, message: "No projects found", statusCode: 404 };
+  }
+  return {
+    projects,
+    messaage: "All complaints retrieved successfully",
     statusCode: 200,
   };
 }

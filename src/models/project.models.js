@@ -11,6 +11,13 @@ const projectSchema = new mongoose.Schema({
   },
   panels: {
     type: [String],
+  },
+  siteLocation:{
+    type: String,
+  },
+  activity:{
+    type: String,
+    default: 'Ongoing',
   }
 }, { timestamps: true });
 
