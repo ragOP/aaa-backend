@@ -37,3 +37,16 @@ exports.uploadVoiceNote = async (filePath, folder = "") => {
     throw new Error(`Voice Note Upload Error: ${error.message}`);
   }
 };
+
+exports.uploadPDF = async (filePath, folder = "") => {
+  try {
+    const result = await cloudinary_js_config.uploader.upload(filePath, {
+      folder,
+      resource_type: "raw",
+    });
+    await fs.unlink(filePath);
+    return result.secure_url;
+  } catch (error) {
+    throw new Error(`PDF Upload Error: ${error.message}`);
+  }
+};

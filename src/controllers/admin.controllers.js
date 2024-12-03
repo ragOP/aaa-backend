@@ -39,8 +39,16 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
 });
 
 exports.handleAddCustomer = asyncHandler(async (req, res) => {
-  const { userName, password, email, name, address, gst, contactPerson, phoneNumber } =
-    req.body;
+  const {
+    userName,
+    password,
+    email,
+    name,
+    address,
+    gst,
+    contactPerson,
+    phoneNumber,
+  } = req.body;
   const { customer, message, statusCode } = await adminAddCustomer(
     userName,
     password,
@@ -267,7 +275,28 @@ exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
 
 exports.handleAddProject = asyncHandler(async (req, res) => {
   const { title, panels, customerId, siteLocation, activity } = req.body;
-  const { project, message, statusCode } = await addProject(customerId, title, panels, siteLocation, activity);
+  const warranty = req.files.warranty[0];
+  const AMC = req.files.AMC[0];
+  const technical_documentation = req.files.technical_documentation[0];
+
+  if(!warranty || !technical_documentation || !AMC){
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "All files are required",
+      })
+    );
+  }
+  
+  const { project, message, statusCode } = await addProject(
+    customerId,
+    title,
+    panels,
+    siteLocation,
+    activity,
+    warranty,
+    AMC,
+    technical_documentation
+  );
 
   if (!project) {
     return res.status(statusCode).json(
@@ -278,9 +307,9 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   }
 
   return res
-   .status(statusCode)
-   .json(new ApiResponse(statusCode, { project }, message));
-})
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { project }, message));
+});
 
 exports.handleGetAllProjects = asyncHandler(async (req, res) => {
   const { projects, message, statusCode } = await getAllProjects();
@@ -294,15 +323,15 @@ exports.handleGetAllProjects = asyncHandler(async (req, res) => {
   }
 
   return res
-   .status(statusCode)
-   .json(new ApiResponse(statusCode, { projects }, message));
-})
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { projects }, message));
+});
 exports.handleGetSingleProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res
-     .status(400)
-     .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+      .status(400)
+      .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
   }
   const { project, messaage, statusCode } = await getSingleProject(id);
   if (!project) {
@@ -313,6 +342,6 @@ exports.handleGetSingleProject = asyncHandler(async (req, res) => {
     );
   }
   return res
-   .status(statusCode)
-   .json(new ApiResponse(statusCode, { data: project }, messaage));
-})
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { data: project }, messaage));
+});

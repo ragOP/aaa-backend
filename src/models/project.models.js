@@ -18,6 +18,15 @@ const projectSchema = new mongoose.Schema({
   activity:{
     type: String,
     default: 'Ongoing',
+  },
+  warranty:{
+    type: String,
+  },
+  AMC: {
+    type: String,
+  },
+  technical_documentation: {
+    type: String,
   }
 }, { timestamps: true });
 

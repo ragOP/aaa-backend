@@ -5,6 +5,7 @@ const Customer = require("../models/customer.models");
 const Engineer = require("../models/engineer.model");
 const Complaint = require("../models/complaint.models");
 const Project = require("../models/project.models");
+const { uploadPDF } = require("../helper/cloudniary.uploads");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -282,17 +283,26 @@ exports.getAllCustomers = async () => {
   };
 };
 
-exports.addProject = async (id, title, panels, siteLocation, activity) => {
+exports.addProject = async (id, title, panels, siteLocation, activity, warranty, AMC, technical_documentation) => {
   const customer = await Customer.findById(id).select("-password");
   if (!customer) {
     return { engineer: null, message: "No Customer found", statusCode: 404 };
   }
+
+  console.log(warranty, technical_documentation, AMC);
+  const warrantyPdf = await uploadPDF(warranty.path, 'projects/pdfs');
+  const AMCPdf = await uploadPDF(AMC.path, 'projects/pdfs');
+  const technical_documentationPdf = await uploadPDF(technical_documentation.path, 'projects/pdfs');
+
   const project = await Project.create({
     customerId: id,
     title,
     panels,
     siteLocation,
     activity,
+    warranty: warrantyPdf,
+    AMC: AMCPdf,
+    technical_documentation: technical_documentationPdf,
   });
 
   const newProject = {
