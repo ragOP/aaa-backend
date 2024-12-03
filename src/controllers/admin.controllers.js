@@ -15,6 +15,7 @@ const {
   addProject,
   getAllProjects,
   getSingleProject,
+  deleteSingleProject,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -286,7 +287,7 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
       })
     );
   }
-  
+
   const { project, message, statusCode } = await addProject(
     customerId,
     title,
@@ -344,4 +345,15 @@ exports.handleGetSingleProject = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(new ApiResponse(statusCode, { data: project }, messaage));
+});
+
+exports.handleSingleDeleteProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+     .status(400)
+     .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+  }
+  const { message, statusCode } = await deleteSingleProject(id);
+  return res.status(statusCode).json(new ApiResponse(statusCode, { message }));
 });

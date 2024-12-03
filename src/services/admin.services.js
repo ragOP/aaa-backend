@@ -354,3 +354,15 @@ exports.getSingleProject = async (id) => {
     statusCode: 200,
   };
 }
+
+exports.deleteSingleProject = async (id) => {
+  const project = await Project.findByIdAndDelete(id);
+  if (!project) {
+    return { project: null, message: "No project found", statusCode: 404 };
+  }
+  return {
+    project,
+    message: "Project deleted successfully",
+    statusCode: 200,
+  };
+}

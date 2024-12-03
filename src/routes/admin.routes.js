@@ -16,6 +16,7 @@ const {
   handleAddProject,
   handleGetAllProjects,
   handleGetSingleProject,
+  handleSingleDeleteProject,
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -45,4 +46,5 @@ router.route("/add-project/").post(
 );
 router.route("/get-project/").get(admin, handleGetAllProjects);
 router.route("/get-single-project/:id").get(admin, handleGetSingleProject);
+router.route("/delete-single-project/:id").delete(admin, handleSingleDeleteProject);
 module.exports = router;
