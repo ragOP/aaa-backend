@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const morganFormat = ":method :url :status :response-time ms";
 
-const port = 8000 || process.env.PORT;
+const port = process.env.PORT || 8000;
 
 const handleConnectionToDB = require('./src/db/config');
 const adminRoute = require("./src/routes/admin.routes");
