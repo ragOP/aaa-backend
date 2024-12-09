@@ -1,5 +1,5 @@
 const { asyncHandler } = require("../common/asyncHandler");
-const { engineerLogin } = require("../services/engineer.services");
+const { engineerLogin, getAllJobs, startJob, getSingleJobs } = require("../services/engineer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
 exports.handleEngineerLogin = asyncHandler(async (req, res) => {
@@ -17,4 +17,58 @@ exports.handleEngineerLogin = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, { user: engineer, token }, message));
+});
+exports.handleGetAllJobs = asyncHandler(async (req, res) => {
+  const engineer = req.user;
+  const id = engineer._id;
+
+  const { jobs, message, statusCode } = await getAllJobs(id);
+  if (!jobs) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user: jobs }, message));
+});
+
+exports.handleStartNewJob = asyncHandler(async (req, res) => {
+  const { statusCode } = req.body;
+  const { id } = req.params;
+  const engineerId = req.user._id;
+
+  const { job, message, statuscode } = await startJob(id, statusCode, engineerId);
+  if (!job) {
+    return res.status(200).json(
+      new ApiResponse(statuscode, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(statuscode, { user: job }, message));
+});
+
+exports.handleGetSingleJobs = asyncHandler(async (req, res) => {
+  const engineerId = req.user._id;
+  const { id } = req.params;
+
+  const { job, message, statusCode } = await getSingleJobs(id, engineerId);
+  if (!job) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user: job }, message));
 });
