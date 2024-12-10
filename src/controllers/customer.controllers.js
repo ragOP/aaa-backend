@@ -35,7 +35,7 @@ exports.handleNewComplaint = asyncHandler(async (req, res) => {
   const complaintData = req.body;
   const images = req.files.images;
   const voiceNote = req?.files?.voiceNote ? req.files.voiceNote[0] : null;
-  console.log(voiceNote, "voice note");
+
   if (!customerId || !complaintData) {
     return res
       .status(400)
@@ -118,13 +118,13 @@ exports.handleGetMyDetails = asyncHandler(async (req, res) => {
   return res
     .status(statusCode)
     .json(new ApiResponse(statusCode, { data: customer }, messaage));
-})
+});
 exports.handleSingleComplaint = asyncHandler(async (req, res) => {
   const { complaintId } = req.params;
   if (!complaintId) {
     return res
-     .status(400)
-     .json(new ApiResponse(400, { messaage: "Please Provide Complaint Id" }));
+      .status(400)
+      .json(new ApiResponse(400, { messaage: "Please Provide Complaint Id" }));
   }
   const { complaint, messaage, statusCode } = await getSingleComplaint(
     complaintId
@@ -137,15 +137,15 @@ exports.handleSingleComplaint = asyncHandler(async (req, res) => {
     );
   }
   return res
-   .status(statusCode)
-   .json(new ApiResponse(statusCode, { data: complaint }, messaage));
-})
-exports.handleAllGetProjects = asyncHandler(async(req, res) => {
-  const { _id } = req.user
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { data: complaint }, messaage));
+});
+exports.handleAllGetProjects = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
   if (!_id) {
     return res
-     .status(400)
-     .json(new ApiResponse(400, { messaage: "Please Provide Customer Id" }));
+      .status(400)
+      .json(new ApiResponse(400, { messaage: "Please Provide Customer Id" }));
   }
   const { projects, messaage, statusCode } = await getAllProjects(_id);
   if (!projects) {
@@ -156,6 +156,6 @@ exports.handleAllGetProjects = asyncHandler(async(req, res) => {
     );
   }
   return res
-   .status(statusCode)
-   .json(new ApiResponse(statusCode, { data: projects }, messaage));
-})
+    .status(statusCode)
+    .json(new ApiResponse(statusCode, { data: projects }, messaage));
+});

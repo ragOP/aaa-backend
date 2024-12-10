@@ -40,6 +40,21 @@ const complaintSchema = new mongoose.Schema({
   },
   voiceNote: {
     type: String,
+  },
+  repairDescription:{
+    type: String,
+    default: null,
+  },
+  replacedParts: {
+    type: String,
+    default: null,
+  },
+  remarks: {
+    type: String,
+    default: null,
+  },
+  completedVoiceNote: {
+    type: String,
   }
 }, {timestamps: true});
 

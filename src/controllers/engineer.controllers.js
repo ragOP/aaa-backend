@@ -1,5 +1,11 @@
 const { asyncHandler } = require("../common/asyncHandler");
-const { engineerLogin, getAllJobs, startJob, getSingleJobs } = require("../services/engineer.services");
+const {
+  engineerLogin,
+  getAllJobs,
+  startJob,
+  getSingleJobs,
+  completedJob,
+} = require("../services/engineer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
 exports.handleEngineerLogin = asyncHandler(async (req, res) => {
@@ -31,9 +37,7 @@ exports.handleGetAllJobs = asyncHandler(async (req, res) => {
     );
   }
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { user: jobs }, message));
+  return res.status(200).json(new ApiResponse(200, { user: jobs }, message));
 });
 
 exports.handleStartNewJob = asyncHandler(async (req, res) => {
@@ -41,7 +45,11 @@ exports.handleStartNewJob = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const engineerId = req.user._id;
 
-  const { job, message, statuscode } = await startJob(id, statusCode, engineerId);
+  const { job, message, statuscode } = await startJob(
+    id,
+    statusCode,
+    engineerId
+  );
   if (!job) {
     return res.status(200).json(
       new ApiResponse(statuscode, {
@@ -68,7 +76,46 @@ exports.handleGetSingleJobs = asyncHandler(async (req, res) => {
     );
   }
 
+  return res.status(200).json(new ApiResponse(200, { user: job }, message));
+});
+
+exports.handleCompletedJob = asyncHandler(async (req, res) => {
+  const engineerId = req.user._id;
+  const { id } = req.params;
+  const { repairDescription, replacedParts, remarks, statusCode } = req.body;
+
+  const completedVoiceNote = req?.files?.completedVoiceNote
+    ? req.files.completedVoiceNote[0]
+    : null;
+
+
+  if(!repairDescription || !completedVoiceNote || !replacedParts || !remarks || !statusCode ){
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "All fields are required",
+      })
+    );
+  }
+
+  const { job, message, statuscode } = await completedJob(
+    id,
+    engineerId,
+    repairDescription,
+    replacedParts,
+    remarks,
+    completedVoiceNote,
+    statusCode
+  );
+
+  if (!job) {
+    return res.status(200).json(
+      new ApiResponse(statuscode, {
+        message,
+      })
+    );
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { user: job }, message));
+    .json(new ApiResponse(statuscode, { user: job }, message));
 });
