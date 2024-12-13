@@ -68,7 +68,7 @@ exports.startJob = async (id, statusCode, engineerId) => {
     return {
       job: null,
       message: "Job is already in progress or closed",
-      statuscode: 400,
+      statuscode: 401,
     };
   }
 
@@ -76,7 +76,7 @@ exports.startJob = async (id, statusCode, engineerId) => {
     return {
       job: null,
       message: "Status code mismatch. Update not allowed",
-      statuscode: 400,
+      statuscode: 401,
     };
   }
   const happyCode = Math.floor(1000 + Math.random() * 9000);
@@ -146,7 +146,7 @@ exports.completedJob = async (
     return {
       job: null,
       message: "Job is not in progress",
-      statuscode: 400,
+      statuscode: 401,
     };
   }
 
@@ -154,7 +154,7 @@ exports.completedJob = async (
     return {
       job: null,
       message: "Job is already closed",
-      statuscode: 400,
+      statuscode: 401,
     };
   }
 
@@ -170,7 +170,7 @@ exports.completedJob = async (
     return {
       job: null,
       message: "Happy code mismatch. Update not allowed",
-      statuscode: 400,
+      statuscode: 401,
     };
   }
 

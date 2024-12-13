@@ -14,7 +14,7 @@ exports.handleEngineerLogin = asyncHandler(async (req, res) => {
   const { engineer, token, message } = await engineerLogin(userName, password);
   if (!engineer) {
     return res.status(200).json(
-      new ApiResponse(200, {
+      new ApiResponse(401, {
         message,
       })
     );
