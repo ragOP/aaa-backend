@@ -27,7 +27,7 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
   );
 
   if (!admin) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -35,7 +35,7 @@ exports.handleAdminLogin = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { token, user: admin }, message));
 });
 
@@ -62,7 +62,7 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
   );
 
   if (!customer) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -70,7 +70,7 @@ exports.handleAddCustomer = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { user: customer }, message));
 });
 
@@ -86,7 +86,7 @@ exports.handleAddEngineer = asyncHandler(async (req, res) => {
   );
 
   if (!engineer) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -94,7 +94,7 @@ exports.handleAddEngineer = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { user: engineer }, message));
 });
 
@@ -102,14 +102,14 @@ exports.handleGetAllComplaints = asyncHandler(async (req, res) => {
   const { complaints, message, statusCode } = await adminGetAllComplaints();
 
   if (!complaints) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -123,14 +123,14 @@ exports.handleGetAllEngineer = asyncHandler(async (req, res) => {
   const { engineer, message, statusCode } = await adminGetAllTechnician();
 
   if (!engineer) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -146,7 +146,7 @@ exports.handleGetSingleComplaint = asyncHandler(async (req, res) => {
   const { complaint, message, statusCode } = await getSingleComplaint(id);
 
   if (!complaint) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -154,7 +154,7 @@ exports.handleGetSingleComplaint = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -174,7 +174,7 @@ exports.handleAddTechnican = asyncHandler(async (req, res) => {
   );
 
   if (!message) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -182,7 +182,7 @@ exports.handleAddTechnican = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { message }, message));
 });
 
@@ -194,7 +194,7 @@ exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
   );
 
   if (!technician) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -202,7 +202,7 @@ exports.handleGetTechnicanDetails = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -220,7 +220,7 @@ exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
   );
 
   if (!customer) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -228,7 +228,7 @@ exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -241,14 +241,14 @@ exports.handleGetCustomerDeatils = asyncHandler(async (req, res) => {
 exports.handleGetDashboardStats = asyncHandler(async (req, res) => {
   const { stats, message, statusCode } = await getAllDashboardStats();
   if (!stats) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(statusCode, { stats }, "Stats retrieved successfully")
     );
@@ -257,14 +257,14 @@ exports.handleGetDashboardStats = asyncHandler(async (req, res) => {
 exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
   const { customers, message, statusCode } = await getAllCustomers();
   if (!customers) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
     );
   }
   return res
-    .status(statusCode)
+    .status(200)
     .json(
       new ApiResponse(
         statusCode,
@@ -281,7 +281,7 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   const technical_documentation = req.files.technical_documentation[0];
 
   if(!warranty || !technical_documentation || !AMC){
-    return res.status(400).json(
+    return res.status(200).json(
       new ApiResponse(400, {
         message: "All files are required",
       })
@@ -300,7 +300,7 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   );
 
   if (!project) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -308,7 +308,7 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { project }, message));
 });
 
@@ -316,7 +316,7 @@ exports.handleGetAllProjects = asyncHandler(async (req, res) => {
   const { projects, message, statusCode } = await getAllProjects();
 
   if (!projects) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         message,
       })
@@ -324,26 +324,26 @@ exports.handleGetAllProjects = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { projects }, message));
 });
 exports.handleGetSingleProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res
-      .status(400)
+      .status(200)
       .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
   }
   const { project, messaage, statusCode } = await getSingleProject(id);
   if (!project) {
-    return res.status(statusCode).json(
+    return res.status(200).json(
       new ApiResponse(statusCode, {
         messaage,
       })
     );
   }
   return res
-    .status(statusCode)
+    .status(200)
     .json(new ApiResponse(statusCode, { data: project }, messaage));
 });
 
@@ -351,9 +351,9 @@ exports.handleSingleDeleteProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res
-     .status(400)
+     .status(200)
      .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
   }
   const { message, statusCode } = await deleteSingleProject(id);
-  return res.status(statusCode).json(new ApiResponse(statusCode, { message }));
+  return res.status(200).json(new ApiResponse(statusCode, { message }));
 });

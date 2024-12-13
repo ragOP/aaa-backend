@@ -90,7 +90,7 @@ exports.handleCompletedJob = asyncHandler(async (req, res) => {
 
 
   if(!repairDescription || !completedVoiceNote || !replacedParts || !remarks || !statusCode ){
-    return res.status(400).json(
+    return res.status(200).json(
       new ApiResponse(400, {
         message: "All fields are required",
       })
