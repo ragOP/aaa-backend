@@ -6,6 +6,7 @@ const Engineer = require("../models/engineer.model");
 const Complaint = require("../models/complaint.models");
 const Project = require("../models/project.models");
 const { uploadPDF } = require("../helper/cloudniary.uploads");
+const Warranty = require("../models/warranty.models");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -78,7 +79,7 @@ exports.adminAddCustomer = async (
     address,
     gst,
     contactPerson,
-    phoneNumber
+    phoneNumber,
   });
   const { password: _, ...customerWithoutPassword } = newCustomer.toObject();
   return {
@@ -261,7 +262,7 @@ exports.getAllDashboardStats = async () => {
     complaintsByActivity,
     complaintsBySeverity,
     totalEngineers,
-    totalProjects
+    totalProjects,
   };
 
   return {
@@ -283,16 +284,27 @@ exports.getAllCustomers = async () => {
   };
 };
 
-exports.addProject = async (id, title, panels, siteLocation, activity, warranty, AMC, technical_documentation) => {
+exports.addProject = async (
+  id,
+  title,
+  panels,
+  siteLocation,
+  activity,
+  warranty,
+  AMC,
+  technical_documentation
+) => {
   const customer = await Customer.findById(id).select("-password");
   if (!customer) {
     return { engineer: null, message: "No Customer found", statusCode: 404 };
   }
 
-  console.log(warranty, technical_documentation, AMC);
-  const warrantyPdf = await uploadPDF(warranty.path, 'projects/pdfs');
-  const AMCPdf = await uploadPDF(AMC.path, 'projects/pdfs');
-  const technical_documentationPdf = await uploadPDF(technical_documentation.path, 'projects/pdfs');
+  const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+  const AMCPdf = await uploadPDF(AMC.path, "projects/pdfs");
+  const technical_documentationPdf = await uploadPDF(
+    technical_documentation.path,
+    "projects/pdfs"
+  );
 
   const project = await Project.create({
     customerId: id,
@@ -327,7 +339,7 @@ exports.getAllProjects = async () => {
         project.customerId
       ).select("-password");
       return {
-       ...project.toObject(),
+        ...project.toObject(),
         customerId: customerDetails || null,
       };
     })
@@ -337,23 +349,23 @@ exports.getAllProjects = async () => {
     message: "All projects fetched successfully",
     statusCode: 200,
   };
-}
+};
 
 exports.getSingleProject = async (id) => {
   const project = await Project.findById(id);
   if (!project) {
     return { project: null, message: "No project found", statusCode: 404 };
   }
-  const customerDetails = await Customer.findById(
-    project.customerId
-  ).select("-password");
+  const customerDetails = await Customer.findById(project.customerId).select(
+    "-password"
+  );
   project.customerId = customerDetails;
   return {
     project,
     message: "Project retrieved successfully",
     statusCode: 200,
   };
-}
+};
 
 exports.deleteSingleProject = async (id) => {
   const project = await Project.findByIdAndDelete(id);
@@ -365,4 +377,37 @@ exports.deleteSingleProject = async (id) => {
     message: "Project deleted successfully",
     statusCode: 200,
   };
-}
+};
+
+exports.generateWarranty = async (
+  id,
+  companyName,
+  durationInMonths,
+  panels,
+  projectName,
+  dateOfCommissioning,
+  warranty
+) => {
+  const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+  const warrantyRes = await Warranty.create({
+    companyId: id,
+    companyName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+    warrntyPdf: warrantyPdf,
+  });
+  if (!warrantyRes) {
+    return {
+      warrantyRes: null,
+      message: "Failed to generate warranty",
+      statusCode: 500,
+    };
+  }
+  return {
+    warrantyRes,
+    message: "Warranty generated successfully",
+    statusCode: 200,
+  };
+};

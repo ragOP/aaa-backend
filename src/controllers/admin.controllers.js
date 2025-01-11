@@ -1,4 +1,5 @@
 const { asyncHandler } = require("../common/asyncHandler");
+const { uploadPDF } = require("../helper/cloudniary.uploads");
 const Complaint = require("../models/complaint.models");
 const {
   adminLogin,
@@ -16,6 +17,7 @@ const {
   getAllProjects,
   getSingleProject,
   deleteSingleProject,
+  generateWarranty,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -280,7 +282,7 @@ exports.handleAddProject = asyncHandler(async (req, res) => {
   const AMC = req.files.AMC[0];
   const technical_documentation = req.files.technical_documentation[0];
 
-  if(!warranty || !technical_documentation || !AMC){
+  if (!warranty || !technical_documentation || !AMC) {
     return res.status(200).json(
       new ApiResponse(400, {
         message: "All files are required",
@@ -351,9 +353,63 @@ exports.handleSingleDeleteProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res
-     .status(200)
-     .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+      .status(200)
+      .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
   }
   const { message, statusCode } = await deleteSingleProject(id);
   return res.status(200).json(new ApiResponse(statusCode, { message }));
+});
+
+exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
+  const {
+    id,
+    companyName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+  } = req.body;
+
+  const warranty = req.file;
+  console.log( warranty );
+
+  if (!warranty) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "Warranty PDF is required",
+      })
+    );
+  }
+
+  if (!id) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "Please provide Project ID",
+      })
+    );
+  }
+  const { warrantyRes, message, statusCode } = await generateWarranty(
+    id,
+    companyName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+    warranty
+  );
+
+  if (!warrantyRes) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  // Success response
+  return res.status(200).json(
+    new ApiResponse(200, {
+      data: warrantyRes,
+    }, message)
+  );
 });
