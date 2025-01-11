@@ -447,3 +447,51 @@ exports.generateAmc = async (
     statusCode: 200,
   };
 };
+
+exports.getWarranty = async (id) => {
+  const warranty = await Warranty.findById(id);
+  if (!warranty) {
+    return { warranty: null, message: "No warranty found", statusCode: 404 };
+  }
+  return {
+    warranty,
+    message: "Warranty retrieved successfully",
+    statusCode: 200,
+  };
+}
+
+exports.getAmc = async (id) => {
+  const amc = await AMC.findById(id);
+  if (!amc) {
+    return { amc: null, message: "No amc found", statusCode: 404 };
+  }
+  return {
+    amc,
+    message: "Amc retrieved successfully",
+    statusCode: 200,
+  };
+};
+
+exports.getAllWarrants = async () => {
+  const warranties = await Warranty.find({});
+  if (warranties.length == 0) {
+    return { warranties: null, message: "No warranties found", statusCode: 404 };
+  }
+  return {
+    warranties,
+    message: "All warranties fetched successfully",
+    statusCode: 200,
+  };
+};
+
+exports.getAllAmcs = async () => {
+  const amcs = await AMC.find({});
+  if (amcs.length == 0) {
+    return { amcs: null, message: "No amcs found", statusCode: 404 };
+  }
+  return {
+    amcs,
+    message: "All amcs fetched successfully",
+    statusCode: 200,
+  };
+}

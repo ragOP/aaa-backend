@@ -19,6 +19,10 @@ const {
   deleteSingleProject,
   generateWarranty,
   generateAmc,
+  getAllAmcs,
+  getAllWarrants,
+  getAmc,
+  getWarranty,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -468,4 +472,76 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
       amcRes,
     }, message)
   );
+});
+
+exports.handleGetWarranty = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+      .status(200)
+      .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+  }
+  const { warranty, messaage, statusCode } = await getWarranty(id);
+  if (!warranty) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(statusCode, { data: warranty }, messaage));
+});
+
+exports.handleGetAmc = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+      .status(200)
+      .json(new ApiResponse(400, { messaage: "Please Provide Project Id" }));
+  }
+  const { amc, messaage, statusCode } = await getAmc(id);
+  if (!amc) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(statusCode, { data: amc }, messaage));
+});
+
+exports.handleGetAllWarrants = asyncHandler(async (req, res) => {
+  const { warranties, message, statusCode } = await getAllWarrants();
+
+  if (!warranties) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(statusCode, { warranties }, message));
+})
+
+exports.handleGetAllAmcs = asyncHandler(async (req, res) => {
+  const { amcs, message, statusCode } = await getAllAmcs();
+
+  if (!amcs) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(statusCode, { amcs }, message));
 });
