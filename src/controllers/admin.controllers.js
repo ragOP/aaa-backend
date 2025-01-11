@@ -18,6 +18,7 @@ const {
   getSingleProject,
   deleteSingleProject,
   generateWarranty,
+  generateAmc,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -409,7 +410,62 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
   // Success response
   return res.status(200).json(
     new ApiResponse(200, {
-      data: warrantyRes,
+      warrantyRes,
+    }, message)
+  );
+});
+
+exports.handleGenerateAmc = asyncHandler(async (req, res) => {
+  const {
+    id,
+    title,
+    companyName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amount,
+  } = req.body;
+
+  const amc = req.file;
+
+  if (!amc) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "AMC PDF is required",
+      })
+    );
+  }
+
+  if (!id) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "Please provide Project ID",
+      })
+    );
+  }
+  const { amcRes, message, statusCode } = await generateAmc(
+    id,
+    companyName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amc,
+    amount,
+    title
+  );
+
+  if (!amcRes) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  // Success response
+  return res.status(200).json(
+    new ApiResponse(200, {
+      amcRes,
     }, message)
   );
 });

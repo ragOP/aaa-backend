@@ -18,6 +18,7 @@ const {
   handleGetSingleProject,
   handleSingleDeleteProject,
   handleGenerateWarranty,
+  handleGenerateAmc
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -49,4 +50,5 @@ router.route("/get-project/").get(admin, handleGetAllProjects);
 router.route("/get-single-project/:id").get(admin, handleGetSingleProject);
 router.route("/delete-single-project/:id").delete(admin, handleSingleDeleteProject);
 router.route("/generate-warranty").post(admin, upload.single('warrantyPdf'), handleGenerateWarranty);
+router.route("/generate-amc").post(admin, upload.single('amcPdf'), handleGenerateAmc);
 module.exports = router;

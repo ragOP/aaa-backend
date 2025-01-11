@@ -7,6 +7,7 @@ const Complaint = require("../models/complaint.models");
 const Project = require("../models/project.models");
 const { uploadPDF } = require("../helper/cloudniary.uploads");
 const Warranty = require("../models/warranty.models");
+const AMC = require("../models/amc.models");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -407,6 +408,41 @@ exports.generateWarranty = async (
   }
   return {
     warrantyRes,
+    message: "Warranty generated successfully",
+    statusCode: 200,
+  };
+};
+
+exports.generateAmc = async (
+  id,
+  companyName,
+  durationInMonths,
+  productName,
+  dateOfCommissioning,
+  amc,
+  amount,
+  title
+) => {
+  const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
+  const amcRes = await AMC.create({
+    companyId: id,
+    companyName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amcPdf: amcPdf,
+    amount,
+    title
+  });
+  if (!amcRes) {
+    return {
+      amcRes: null,
+      message: "Failed to generate warranty",
+      statusCode: 500,
+    };
+  }
+  return {
+    amcRes,
     message: "Warranty generated successfully",
     statusCode: 200,
   };
