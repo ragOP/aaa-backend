@@ -516,7 +516,19 @@ exports.editAmc = async (
   amount,
   title
 ) => {
-  const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
+  let amcPdf; 
+  if(amc){
+    amcPdf = await uploadPDF(amc.path, "projects/pdfs");
+  }
+  console.log(customerId,
+    projectId,
+    customerName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amc,
+    amount,
+    title)
   const amcRes = await AMC.findByIdAndUpdate(id, {
     customerId,
     projectId,
@@ -553,7 +565,10 @@ exports.editWarranty = async (
   dateOfCommissioning,
   warranty
 ) => {
-  const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+  let warrantyPdf;
+  if(warranty){
+    warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+  }
   const warrantyRes = await Warranty.findByIdAndUpdate(id, {
     customerId,
     projectId,

@@ -18,6 +18,8 @@ const logger = require("./logger.js");
 app.use(cors());
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 //Logger
 app.use(
   morgan(morganFormat, {

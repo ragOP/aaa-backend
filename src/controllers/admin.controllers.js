@@ -449,7 +449,7 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     );
   }
 
-  if (!id) {
+  if (!projectId) {
     return res.status(400).json(
       new ApiResponse(400, {
         message: "Please provide Project ID",
@@ -572,15 +572,10 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
   } = req.body;
   const amc = req.file;
 
-  if (!amc) {
-    return res.status(400).json(
-      new ApiResponse(400, {
-        message: "AMC PDF is required",
-      })
-    );
-  }
+  console.log("req.body:", req.body);
+  console.log("req.params:", req.params);
 
-  if (!id) {
+   if (!id) {
     return res.status(400).json(
       new ApiResponse(400, {
         message: "Please provide Project ID",
@@ -632,6 +627,9 @@ exports.handleEditWarranty = asyncHandler(async (req, res) => {
     dateOfCommissioning,
   } = req.body;
   const warranty = req.file;
+
+  console.log("req.body:", req.body);
+  console.log("req.params:", req.params);
 
   if (!id) {
     return res.status(400).json(

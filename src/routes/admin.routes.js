@@ -61,6 +61,6 @@ router.route("/get-amc/:id").get(admin, handleGetAmc);
 router.route("/get-warranty/:id").get(admin, handleGetWarranty);
 router.route("/get-all-warranty").get(admin, handleGetAllWarrants);
 router.route("/get-all-amc/").get(admin, handleGetAllAmcs);
-router.route("/edit-amc/:id").get(admin, handleEditAmc);
-router.route("/edit-warranty/:id").get(admin, handleEditWarranty);
+router.route("/edit-amc/:id").patch(admin, upload.single('amcPdf'), handleEditAmc);
+router.route("/edit-warranty/:id").patch(admin, upload.single('warrantyPdf'), handleEditWarranty);
 module.exports = router;
