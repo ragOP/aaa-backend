@@ -23,7 +23,8 @@ const {
   handleGetWarranty,
   handleGetAllWarrants,
   handleGetAllAmcs,
-  handleEditAmc
+  handleEditAmc,
+  handleEditWarranty
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -61,4 +62,5 @@ router.route("/get-warranty/:id").get(admin, handleGetWarranty);
 router.route("/get-all-warranty").get(admin, handleGetAllWarrants);
 router.route("/get-all-amc/").get(admin, handleGetAllAmcs);
 router.route("/edit-amc/:id").get(admin, handleEditAmc);
+router.route("/edit-warranty/:id").get(admin, handleEditWarranty);
 module.exports = router;

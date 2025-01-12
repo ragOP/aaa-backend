@@ -436,7 +436,7 @@ exports.generateAmc = async (
     dateOfCommissioning,
     amcPdf: amcPdf,
     amount,
-    title
+    title,
   });
   if (!amcRes) {
     return {
@@ -462,7 +462,7 @@ exports.getWarranty = async (id) => {
     message: "Warranty retrieved successfully",
     statusCode: 200,
   };
-}
+};
 
 exports.getAmc = async (id) => {
   const amc = await AMC.findById(id);
@@ -479,7 +479,11 @@ exports.getAmc = async (id) => {
 exports.getAllWarrants = async () => {
   const warranties = await Warranty.find({});
   if (warranties.length == 0) {
-    return { warranties: null, message: "No warranties found", statusCode: 404 };
+    return {
+      warranties: null,
+      message: "No warranties found",
+      statusCode: 404,
+    };
   }
   return {
     warranties,
@@ -498,18 +502,31 @@ exports.getAllAmcs = async () => {
     message: "All amcs fetched successfully",
     statusCode: 200,
   };
-}
+};
 
-exports.editAmc = async (id, companyName, durationInMonths, productName, dateOfCommissioning, amc, amount, title) => {
+exports.editAmc = async (
+  id,
+  customerId,
+  projectId,
+  customerName,
+  durationInMonths,
+  productName,
+  dateOfCommissioning,
+  amc,
+  amount,
+  title
+) => {
   const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
   const amcRes = await AMC.findByIdAndUpdate(id, {
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     productName,
     dateOfCommissioning,
     amcPdf,
     amount,
-    title
+    title,
   });
   if (!amcRes) {
     return {
@@ -523,4 +540,40 @@ exports.editAmc = async (id, companyName, durationInMonths, productName, dateOfC
     message: "Amc edited successfully",
     statusCode: 200,
   };
-}
+};
+
+exports.editWarranty = async (
+  id,
+  customerId,
+  projectId,
+  customerName,
+  durationInMonths,
+  panels,
+  projectName,
+  dateOfCommissioning,
+  warranty
+) => {
+  const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+  const warrantyRes = await Warranty.findByIdAndUpdate(id, {
+    customerId,
+    projectId,
+    customerName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+    warrntyPdf: warrantyPdf,
+  });
+  if (!warrantyRes) {
+    return {
+      warrantyRes: null,
+      message: "Failed to edit warranty",
+      statusCode: 500,
+    };
+  }
+  return {
+    warrantyRes,
+    message: "Warranty edited successfully",
+    statusCode: 200,
+  };
+};

@@ -23,7 +23,8 @@ const {
   getAllWarrants,
   getAmc,
   getWarranty,
-  editAmc
+  editAmc,
+  editWarranty,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -378,7 +379,7 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
   } = req.body;
 
   const warranty = req.file;
-  console.log( warranty );
+  console.log(warranty);
 
   if (!warranty) {
     return res.status(400).json(
@@ -416,9 +417,13 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
 
   // Success response
   return res.status(200).json(
-    new ApiResponse(200, {
-      warrantyRes,
-    }, message)
+    new ApiResponse(
+      200,
+      {
+        warrantyRes,
+      },
+      message
+    )
   );
 });
 
@@ -473,9 +478,13 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
 
   // Success response
   return res.status(200).json(
-    new ApiResponse(200, {
-      amcRes,
-    }, message)
+    new ApiResponse(
+      200,
+      {
+        amcRes,
+      },
+      message
+    )
   );
 });
 
@@ -533,7 +542,7 @@ exports.handleGetAllWarrants = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(statusCode, { warranties }, message));
-})
+});
 
 exports.handleGetAllAmcs = asyncHandler(async (req, res) => {
   const { amcs, message, statusCode } = await getAllAmcs();
@@ -546,14 +555,21 @@ exports.handleGetAllAmcs = asyncHandler(async (req, res) => {
     );
   }
 
-  return res
-    .status(200)
-    .json(new ApiResponse(statusCode, { amcs }, message));
+  return res.status(200).json(new ApiResponse(statusCode, { amcs }, message));
 });
 
 exports.handleEditAmc = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, companyName, durationInMonths, productName, dateOfCommissioning, amount } = req.body;
+  const {
+    title,
+    customerId,
+    projectId,
+    customerName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amount,
+  } = req.body;
   const amc = req.file;
 
   if (!amc) {
@@ -573,7 +589,9 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
   }
   const { amcRes, message, statusCode } = await editAmc(
     id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     productName,
     dateOfCommissioning,
@@ -592,8 +610,64 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
 
   // Success response
   return res.status(200).json(
-    new ApiResponse(200, {
-      amcRes,
-    }, message)
+    new ApiResponse(
+      200,
+      {
+        amcRes,
+      },
+      message
+    )
   );
-})
+});
+
+exports.handleEditWarranty = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const {
+    customerId,
+    projectId,
+    customerName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+  } = req.body;
+  const warranty = req.file;
+
+  if (!id) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "Please provide ID",
+      })
+    );
+  }
+  const { warrantyRes, message, statusCode } = await editWarranty(
+    id,
+    customerId,
+    projectId,
+    customerName,
+    durationInMonths,
+    panels,
+    projectName,
+    dateOfCommissioning,
+    warranty
+  );
+
+  if (!warrantyRes) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  // Success response
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        warrantyRes,
+      },
+      message
+    )
+  );
+});
