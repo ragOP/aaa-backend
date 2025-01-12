@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
 const warrantySchema = new mongoose.Schema({
-  companyId: {
+  customerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',
     required: true,
   },
-  companyName: {
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true,
+  },
+  customerName: {
     type: String,
     required: true,
   },

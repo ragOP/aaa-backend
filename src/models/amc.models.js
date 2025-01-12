@@ -2,11 +2,21 @@ const mongoose = require("mongoose");
 
 const amcSchema = new mongoose.Schema(
   {
-    title: {
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+    customerName: {
       type: String,
       required: true,
     },
-    companyName: {
+    title: {
       type: String,
       required: true,
     },

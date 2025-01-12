@@ -381,8 +381,9 @@ exports.deleteSingleProject = async (id) => {
 };
 
 exports.generateWarranty = async (
-  id,
-  companyName,
+  customerId,
+  projectId,
+  customerName,
   durationInMonths,
   panels,
   projectName,
@@ -391,8 +392,9 @@ exports.generateWarranty = async (
 ) => {
   const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
   const warrantyRes = await Warranty.create({
-    companyId: id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     panels,
     projectName,
@@ -414,8 +416,9 @@ exports.generateWarranty = async (
 };
 
 exports.generateAmc = async (
-  id,
-  companyName,
+  customerId,
+  projectId,
+  customerName,
   durationInMonths,
   productName,
   dateOfCommissioning,
@@ -425,8 +428,9 @@ exports.generateAmc = async (
 ) => {
   const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
   const amcRes = await AMC.create({
-    companyId: id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     productName,
     dateOfCommissioning,
@@ -492,6 +496,31 @@ exports.getAllAmcs = async () => {
   return {
     amcs,
     message: "All amcs fetched successfully",
+    statusCode: 200,
+  };
+}
+
+exports.editAmc = async (id, companyName, durationInMonths, productName, dateOfCommissioning, amc, amount, title) => {
+  const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
+  const amcRes = await AMC.findByIdAndUpdate(id, {
+    companyName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amcPdf,
+    amount,
+    title
+  });
+  if (!amcRes) {
+    return {
+      amcRes: null,
+      message: "Failed to edit amc",
+      statusCode: 500,
+    };
+  }
+  return {
+    amcRes,
+    message: "Amc edited successfully",
     statusCode: 200,
   };
 }

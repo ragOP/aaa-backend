@@ -23,6 +23,7 @@ const {
   getAllWarrants,
   getAmc,
   getWarranty,
+  editAmc
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -367,8 +368,9 @@ exports.handleSingleDeleteProject = asyncHandler(async (req, res) => {
 
 exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
   const {
-    id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     panels,
     projectName,
@@ -394,8 +396,9 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
     );
   }
   const { warrantyRes, message, statusCode } = await generateWarranty(
-    id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     panels,
     projectName,
@@ -421,9 +424,10 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
 
 exports.handleGenerateAmc = asyncHandler(async (req, res) => {
   const {
-    id,
+    customerId,
+    projectId,
+    customerName,
     title,
-    companyName,
     durationInMonths,
     productName,
     dateOfCommissioning,
@@ -448,8 +452,9 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     );
   }
   const { amcRes, message, statusCode } = await generateAmc(
-    id,
-    companyName,
+    customerId,
+    projectId,
+    customerName,
     durationInMonths,
     productName,
     dateOfCommissioning,
@@ -545,3 +550,50 @@ exports.handleGetAllAmcs = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(statusCode, { amcs }, message));
 });
+
+exports.handleEditAmc = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { title, companyName, durationInMonths, productName, dateOfCommissioning, amount } = req.body;
+  const amc = req.file;
+
+  if (!amc) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "AMC PDF is required",
+      })
+    );
+  }
+
+  if (!id) {
+    return res.status(400).json(
+      new ApiResponse(400, {
+        message: "Please provide Project ID",
+      })
+    );
+  }
+  const { amcRes, message, statusCode } = await editAmc(
+    id,
+    companyName,
+    durationInMonths,
+    productName,
+    dateOfCommissioning,
+    amc,
+    amount,
+    title
+  );
+
+  if (!amcRes) {
+    return res.status(statusCode).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  // Success response
+  return res.status(200).json(
+    new ApiResponse(200, {
+      amcRes,
+    }, message)
+  );
+})
