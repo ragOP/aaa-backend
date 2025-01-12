@@ -389,7 +389,7 @@ exports.handleGenerateWarranty = asyncHandler(async (req, res) => {
     );
   }
 
-  if (!id) {
+  if (!projectId) {
     return res.status(400).json(
       new ApiResponse(400, {
         message: "Please provide Project ID",
