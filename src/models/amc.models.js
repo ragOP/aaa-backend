@@ -15,11 +15,7 @@ const amcSchema = new mongoose.Schema(
     customerName: {
       type: String,
       required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
+    },    
     durationInMonths: {
       type: Number,
       required: true,

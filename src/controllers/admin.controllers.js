@@ -432,7 +432,6 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     customerId,
     projectId,
     customerName,
-    title,
     durationInMonths,
     productName,
     dateOfCommissioning,
@@ -465,7 +464,6 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     dateOfCommissioning,
     amc,
     amount,
-    title
   );
 
   if (!amcRes) {
@@ -561,7 +559,6 @@ exports.handleGetAllAmcs = asyncHandler(async (req, res) => {
 exports.handleEditAmc = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const {
-    title,
     customerId,
     projectId,
     customerName,
@@ -592,7 +589,6 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
     dateOfCommissioning,
     amc,
     amount,
-    title
   );
 
   if (!amcRes) {

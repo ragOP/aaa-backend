@@ -423,8 +423,7 @@ exports.generateAmc = async (
   productName,
   dateOfCommissioning,
   amc,
-  amount,
-  title
+  amount
 ) => {
   const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
   const amcRes = await AMC.create({
@@ -436,7 +435,6 @@ exports.generateAmc = async (
     dateOfCommissioning,
     amcPdf: amcPdf,
     amount,
-    title,
   });
   if (!amcRes) {
     return {
@@ -513,22 +511,12 @@ exports.editAmc = async (
   productName,
   dateOfCommissioning,
   amc,
-  amount,
-  title
+  amount
 ) => {
-  let amcPdf; 
-  if(amc){
+  let amcPdf;
+  if (amc) {
     amcPdf = await uploadPDF(amc.path, "projects/pdfs");
   }
-  console.log(customerId,
-    projectId,
-    customerName,
-    durationInMonths,
-    productName,
-    dateOfCommissioning,
-    amc,
-    amount,
-    title)
   const amcRes = await AMC.findByIdAndUpdate(id, {
     customerId,
     projectId,
@@ -538,7 +526,6 @@ exports.editAmc = async (
     dateOfCommissioning,
     amcPdf,
     amount,
-    title,
   });
   if (!amcRes) {
     return {
@@ -566,7 +553,7 @@ exports.editWarranty = async (
   warranty
 ) => {
   let warrantyPdf;
-  if(warranty){
+  if (warranty) {
     warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
   }
   const warrantyRes = await Warranty.findByIdAndUpdate(id, {
