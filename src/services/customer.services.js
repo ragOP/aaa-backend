@@ -8,6 +8,8 @@ const {
 } = require("../helper/cloudniary.uploads");
 const Engineer = require("../models/engineer.model");
 const Project = require("../models/project.models");
+const Warranty = require("../models/warranty.models");
+const AMC = require("../models/amc.models");
 
 exports.customerLogin = async (userName, password) => {
   const customer = await Customer.findOne({ userName });
@@ -158,13 +160,44 @@ exports.getSingleComplaint = async (id) => {
 }
 
 exports.getAllProjects = async (customerId) => {
-  const projects = await Project.find({ customerId });
-  if (projects.length == 0) {
-    return { complaint: null, message: "No projects found", statusCode: 404 };
+  try {
+    const projects = await Project.find({ customerId });
+    const warranties = await Warranty.find({ customerId });
+    const amcs = await AMC.find({ customerId });
+
+    console.log(projectsWithDetails, "projectsWithDetails");
+
+    if (projects.length === 0) {
+      return { complaint: null, message: "No projects found", statusCode: 404 };
+    }
+
+    const projectsWithDetails = projects.map((project) => {
+      const projectWarranties = warranties.filter(
+        (warranty) => warranty.projectId.toString() === project._id.toString()
+      );
+      const projectAMCs = amcs.filter(
+        (amc) => amc.projectId.toString() === project._id.toString()
+      );
+
+      return {
+        ...project._doc,
+        warranties: projectWarranties,
+        amcs: projectAMCs,
+      };
+    });
+
+    
+
+    return {
+      projects: projectsWithDetails,
+      message: "All projects retrieved successfully",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      message: "An error occurred while retrieving the projects",
+      error: error.message,
+      statusCode: 500,
+    };
   }
-  return {
-    projects,
-    messaage: "All complaints retrieved successfully",
-    statusCode: 200,
-  };
-}
+};

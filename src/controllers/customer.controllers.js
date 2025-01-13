@@ -142,6 +142,7 @@ exports.handleSingleComplaint = asyncHandler(async (req, res) => {
 });
 exports.handleAllGetProjects = asyncHandler(async (req, res) => {
   const { _id } = req.user;
+  console.log(_id, "handle");
   if (!_id) {
     return res
       .status(200)

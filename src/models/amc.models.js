@@ -20,7 +20,7 @@ const amcSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    productName: {
+    projectName: {
       type: String,
       required: true,
     },
