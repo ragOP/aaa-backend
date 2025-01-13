@@ -20,6 +20,10 @@ const amcSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    panels: {
+      type: Array,
+      default: [],
+    },
     projectName: {
       type: String,
       required: true,

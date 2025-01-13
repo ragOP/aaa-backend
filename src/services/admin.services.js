@@ -423,7 +423,8 @@ exports.generateAmc = async (
   projectName,
   dateOfCommissioning,
   amc,
-  amount
+  amount,
+  panels,
 ) => {
   const amcPdf = await uploadPDF(amc.path, "projects/pdfs");
   const amcRes = await AMC.create({
@@ -435,6 +436,7 @@ exports.generateAmc = async (
     dateOfCommissioning,
     amcPdf: amcPdf,
     amount,
+    panels,
   });
   if (!amcRes) {
     return {
@@ -511,6 +513,7 @@ exports.editAmc = async (
   projectName,
   dateOfCommissioning,
   amc,
+  panels,
   amount
 ) => {
   let amcPdf;
@@ -525,6 +528,7 @@ exports.editAmc = async (
     projectName,
     dateOfCommissioning,
     amcPdf,
+    panels,
     amount,
   });
   if (!amcRes) {

@@ -436,6 +436,7 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     projectName,
     dateOfCommissioning,
     amount,
+    panels,
   } = req.body;
 
   const amc = req.file;
@@ -464,6 +465,7 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     dateOfCommissioning,
     amc,
     amount,
+    panels,
   );
 
   if (!amcRes) {
@@ -566,6 +568,7 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
     projectName,
     dateOfCommissioning,
     amount,
+    panels,
   } = req.body;
   const amc = req.file;
 
@@ -588,6 +591,7 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
     projectName,
     dateOfCommissioning,
     amc,
+    panels,
     amount,
   );
 
