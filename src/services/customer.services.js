@@ -165,8 +165,6 @@ exports.getAllProjects = async (customerId) => {
     const warranties = await Warranty.find({ customerId });
     const amcs = await AMC.find({ customerId });
 
-    console.log(projectsWithDetails, "projectsWithDetails");
-
     if (projects.length === 0) {
       return { complaint: null, message: "No projects found", statusCode: 404 };
     }

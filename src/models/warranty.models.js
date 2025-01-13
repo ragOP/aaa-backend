@@ -20,7 +20,7 @@ const warrantySchema = new mongoose.Schema({
     required: true,
   },
   panels: {
-    type: [String],
+    type: Array,
     default: [],
   },
   projectName: {
