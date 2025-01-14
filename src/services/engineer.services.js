@@ -27,7 +27,7 @@ exports.engineerLogin = async (userName, password) => {
 };
 
 exports.getAllJobs = async (id) => {
-  const jobs = await Complaint.find({ technician: id });
+  const jobs = await Complaint.find({ technician: id }).sort({createdAt: -1});
   const populatedJobs = await Promise.all(
     jobs.map(async (job) => {
       const customerDetails = await Customer.findById(job.customerId).select(

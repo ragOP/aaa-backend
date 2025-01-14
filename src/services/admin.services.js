@@ -453,7 +453,7 @@ exports.generateAmc = async (
 };
 
 exports.getWarranty = async (id) => {
-  const warranty = await Warranty.findById(id);
+  const warranty = await Warranty.findById(id).sort({createdAt: -1});
   if (!warranty) {
     return { warranty: null, message: "No warranty found", statusCode: 404 };
   }
@@ -465,7 +465,7 @@ exports.getWarranty = async (id) => {
 };
 
 exports.getAmc = async (id) => {
-  const amc = await AMC.findById(id);
+  const amc = await AMC.findById(id).sort({createdAt: -1});
   if (!amc) {
     return { amc: null, message: "No amc found", statusCode: 404 };
   }
