@@ -40,6 +40,10 @@ const amcSchema = new mongoose.Schema(
       type: String, // Path to uploaded PDF
       default: "",
     },
+    scope: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

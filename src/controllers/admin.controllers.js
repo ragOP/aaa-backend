@@ -437,6 +437,7 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     dateOfCommissioning,
     amount,
     panels,
+    scope,
   } = req.body;
 
   const amc = req.file;
@@ -466,6 +467,7 @@ exports.handleGenerateAmc = asyncHandler(async (req, res) => {
     amc,
     amount,
     panels,
+    scope
   );
 
   if (!amcRes) {
@@ -569,11 +571,12 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
     dateOfCommissioning,
     amount,
     panels,
+    scope
   } = req.body;
   const amc = req.file;
 
-  console.log("req.body:", req.body);
-  console.log("req.params:", req.params);
+  // console.log("req.body:", req.body);
+  // console.log("req.params:", req.params);
 
    if (!id) {
     return res.status(400).json(
@@ -593,6 +596,7 @@ exports.handleEditAmc = asyncHandler(async (req, res) => {
     amc,
     panels,
     amount,
+    scope
   );
 
   if (!amcRes) {
