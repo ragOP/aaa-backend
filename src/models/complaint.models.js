@@ -55,6 +55,14 @@ const complaintSchema = new mongoose.Schema({
   },
   completedVoiceNote: {
     type: String,
+  },
+  geoLatitude: {
+    type: Number,
+    default: null,
+  },
+  geoLongitude: {
+    type: Number,
+    default: null,
   }
 }, {timestamps: true});
 
