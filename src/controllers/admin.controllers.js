@@ -25,6 +25,7 @@ const {
   getWarranty,
   editAmc,
   editWarranty,
+  getAllNotifications
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -673,3 +674,17 @@ exports.handleEditWarranty = asyncHandler(async (req, res) => {
     )
   );
 });
+
+exports.handleGetAllNotifications = asyncHandler(async (req, res) => {
+  const { notifications, message, statusCode } = await getAllNotifications();
+
+  if (!notifications) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res.status(200).json(new ApiResponse(statusCode, { notifications }, message));
+})

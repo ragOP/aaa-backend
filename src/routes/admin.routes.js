@@ -24,7 +24,8 @@ const {
   handleGetAllWarrants,
   handleGetAllAmcs,
   handleEditAmc,
-  handleEditWarranty
+  handleEditWarranty,
+  handleGetAllNotifications
 } = require("../controllers/admin.controllers");
 const { admin } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -63,4 +64,5 @@ router.route("/get-all-warranty").get(admin, handleGetAllWarrants);
 router.route("/get-all-amc/").get(admin, handleGetAllAmcs);
 router.route("/edit-amc/:id").patch(admin, upload.single('amcPdf'), handleEditAmc);
 router.route("/edit-warranty/:id").patch(admin, upload.single('warrantyPdf'), handleEditWarranty);
+router.route("/get-all-notification").get(admin, handleGetAllNotifications);
 module.exports = router;

@@ -4,7 +4,7 @@ const amcSchema = new mongoose.Schema(
   {
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
+      ref: "Customer",
       required: true,
     },
     projectId: {

@@ -438,7 +438,7 @@ exports.generateAmc = async (
     amcPdf: amcPdf,
     amount,
     panels,
-    scope
+    scope,
   });
   if (!amcRes) {
     return {
@@ -455,7 +455,7 @@ exports.generateAmc = async (
 };
 
 exports.getWarranty = async (id) => {
-  const warranty = await Warranty.findById(id).sort({createdAt: -1});
+  const warranty = await Warranty.findById(id).sort({ createdAt: -1 });
   if (!warranty) {
     return { warranty: null, message: "No warranty found", statusCode: 404 };
   }
@@ -467,7 +467,7 @@ exports.getWarranty = async (id) => {
 };
 
 exports.getAmc = async (id) => {
-  const amc = await AMC.findById(id).sort({createdAt: -1});
+  const amc = await AMC.findById(id).sort({ createdAt: -1 });
   if (!amc) {
     return { amc: null, message: "No amc found", statusCode: 404 };
   }
@@ -533,7 +533,7 @@ exports.editAmc = async (
     amcPdf,
     panels,
     amount,
-    scope
+    scope,
   });
   if (!amcRes) {
     return {
@@ -584,6 +584,31 @@ exports.editWarranty = async (
   return {
     warrantyRes,
     message: "Warranty edited successfully",
+    statusCode: 200,
+  };
+};
+
+exports.getAllNotifications = async () => {
+  const notifications = await Notification.find({}).sort({ createdAt: -1 });
+  if (notifications.length == 0) {
+    return {
+      notifications: null,
+      message: "No notifications found",
+      statusCode: 404,
+    };
+  }
+  const usersWithDetails = notifications.map((user) => {
+    const engineer = Engineer.findById(user.userId).select("-password");
+    const customer = Customer.findById(user.userId).select("-password");
+    return {
+      engineer: engineer ? engineer.toObject() : null,
+      customer: customer ? customer.toObject() : null,
+      ...user.toObject(),
+    };
+  });
+  return {
+    notifications: usersWithDetails,
+    message: "All notifications fetched successfully",
     statusCode: 200,
   };
 };

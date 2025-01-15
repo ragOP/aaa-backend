@@ -216,7 +216,7 @@ exports.createNotification = async (formData) => {
     }
 
     const notification = await Notification.create({
-      formData,
+      userId: customer._id,
     });
 
     return {

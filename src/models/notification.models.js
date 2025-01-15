@@ -2,17 +2,16 @@ const mongoose = require("mongoose");
 
 const notificationInformationSchema = new mongoose.Schema(
   {
-    email: {
-      type: String,
-      required: true,
-    },
-    userName: {
-      type: String,
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const Notification = mongoose.model("Notification", notificationInformationSchema);
+const Notification = mongoose.model(
+  "Notification",
+  notificationInformationSchema
+);
 module.exports = Notification;
