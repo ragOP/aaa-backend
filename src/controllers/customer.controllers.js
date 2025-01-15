@@ -164,13 +164,13 @@ exports.handleAllGetProjects = asyncHandler(async (req, res) => {
 
 exports.handleForgetPassword = asyncHandler(async (req, res) => {
   const formData = req.body;
-  const { notification, statusCode, messaage } = await createNotification(
+  const { notification, message, statusCode } = await createNotification(
     formData
   );
   if (!notification) {
     return res.status(200).json(
       new ApiResponse(statusCode, {
-        messaage,
+        message,
       })
     );
   }
@@ -180,7 +180,7 @@ exports.handleForgetPassword = asyncHandler(async (req, res) => {
       {
         data: notification,
       },
-      messaage
+      message
     )
   );
 });

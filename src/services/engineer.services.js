@@ -4,6 +4,7 @@ const Engineer = require("../models/engineer.model");
 const Complaint = require("../models/complaint.models");
 const Customer = require("../models/customer.models");
 const { uploadVoiceNote } = require("../helper/cloudniary.uploads");
+const Notification = require("../models/notification.models");
 
 exports.engineerLogin = async (userName, password) => {
   const engineer = await Engineer.findOne({ userName });
@@ -27,7 +28,7 @@ exports.engineerLogin = async (userName, password) => {
 };
 
 exports.getAllJobs = async (id) => {
-  const jobs = await Complaint.find({ technician: id }).sort({createdAt: -1});
+  const jobs = await Complaint.find({ technician: id }).sort({ createdAt: -1 });
   const populatedJobs = await Promise.all(
     jobs.map(async (job) => {
       const customerDetails = await Customer.findById(job.customerId).select(
@@ -166,7 +167,7 @@ exports.completedJob = async (
     );
   }
 
-  if(job.statusCode != statusCode){
+  if (job.statusCode != statusCode) {
     return {
       job: null,
       message: "Happy code mismatch. Update not allowed",
@@ -190,5 +191,28 @@ exports.completedJob = async (
     job: updatedJob,
     message: "Job completed successfully",
     statuscode: 200,
+  };
+};
+exports.createNotification = async (formData) => {
+  const { email, userName } = formData;
+  const engineer = await Engineer.findOne({
+    $or: [{ email: email, userName: userName }],
+  });
+
+  if (!engineer) {
+    return {
+      notification: null,
+      message: "Engineer not found",
+      statusCode: 404,
+    };
+  }
+
+  const notification = await Notification.create({
+    userId: engineer._id,
+  });
+  return {
+    notification,
+    message: "Notification created successfully",
+    statusCode: 201,
   };
 };

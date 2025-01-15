@@ -7,6 +7,7 @@ const {
   handleStartNewJob,
   handleGetSingleJobs,
   handleCompletedJob,
+  handleForgetPassword
 } = require("../controllers/engineer.controllers");
 const { engineer } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -23,5 +24,6 @@ router
     upload.fields([{ name: "completedVoiceNote", maxCount: 1 }]),
     handleCompletedJob
   );
+router.route("/forget-password").post(engineer, handleForgetPassword);  
 
 module.exports = router;

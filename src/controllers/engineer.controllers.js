@@ -5,6 +5,7 @@ const {
   startJob,
   getSingleJobs,
   completedJob,
+  createNotification,
 } = require("../services/engineer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -118,4 +119,27 @@ exports.handleCompletedJob = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(statuscode, { user: job }, message));
+});
+
+exports.handleForgetPassword = asyncHandler(async (req, res) => {
+  const formData = req.body;
+  const { notification, statusCode, message } = await createNotification(
+    formData
+  );
+  if (!notification) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+  return res.status(200).json(
+    new ApiResponse(
+      statusCode,
+      {
+        data: notification,
+      },
+      message
+    )
+  );
 });

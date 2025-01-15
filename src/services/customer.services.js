@@ -204,31 +204,24 @@ exports.getAllProjects = async (customerId) => {
 };
 
 exports.createNotification = async (formData) => {
-  try {
-    const { email, userName } = formData;
-    const customer = await Customer.findOne({
-      $or: [{ email: email, userName: userName }],
-    });
-    if (!customer) {
-      return {
-        message: "Customer not found",
-        statusCode: 404,
-      };
-    }
-
-    const notification = await Notification.create({
-      userId: customer._id,
-    });
+  const { email, userName } = formData;
+  const customer = await Customer.findOne({
+    $or: [{ email: email, userName: userName }],
+  });
+  if (!customer) {
     return {
-      notification,
-      message: "Notification created successfully",
-      statusCode: 201,
-    };
-  } catch (error) {
-    return {
-      message: "An error occurred while creating the notification",
-      error: error.message,
-      statusCode: 500,
+      notification: null,
+      message: "Customer not found",
+      statusCode: 404,
     };
   }
+
+  const notification = await Notification.create({
+    userId: customer._id,
+  });
+  return {
+    notification,
+    message: "Notification created successfully",
+    statusCode: 201,
+  };
 };
