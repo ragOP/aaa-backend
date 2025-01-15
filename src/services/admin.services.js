@@ -8,6 +8,7 @@ const Project = require("../models/project.models");
 const { uploadPDF } = require("../helper/cloudniary.uploads");
 const Warranty = require("../models/warranty.models");
 const AMC = require("../models/amc.models");
+const Notification = require("../models/notification.models");
 
 exports.adminLogin = async (userName, password) => {
   const admin = await Admin.findOne({ userName });
@@ -597,15 +598,30 @@ exports.getAllNotifications = async () => {
       statusCode: 404,
     };
   }
-  const usersWithDetails = notifications.map((user) => {
-    const engineer = Engineer.findById(user.userId).select("-password");
-    const customer = Customer.findById(user.userId).select("-password");
-    return {
-      engineer: engineer ? engineer.toObject() : null,
-      customer: customer ? customer.toObject() : null,
-      ...user.toObject(),
-    };
-  });
+  const usersWithDetails = await Promise.all(
+    notifications.map(async (user) => {
+      try {
+        const engineer = await Engineer.findById(user.userId).select(
+          "-password"
+        );
+        const customer = await Customer.findById(user.userId).select(
+          "-password"
+        );
+        return {
+          engineer: engineer ? engineer.toObject() : null,
+          customer: customer ? customer.toObject() : null,
+          ...user.toObject(),
+        };
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        return {
+          engineer: null,
+          customer: null,
+          ...user.toObject(),
+        };
+      }
+    })
+  );
   return {
     notifications: usersWithDetails,
     message: "All notifications fetched successfully",

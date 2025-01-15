@@ -10,6 +10,7 @@ const Engineer = require("../models/engineer.model");
 const Project = require("../models/project.models");
 const Warranty = require("../models/warranty.models");
 const AMC = require("../models/amc.models");
+const Notification = require("../models/notification.models");
 
 exports.customerLogin = async (userName, password) => {
   const customer = await Customer.findOne({ userName });
@@ -218,7 +219,6 @@ exports.createNotification = async (formData) => {
     const notification = await Notification.create({
       userId: customer._id,
     });
-
     return {
       notification,
       message: "Notification created successfully",
