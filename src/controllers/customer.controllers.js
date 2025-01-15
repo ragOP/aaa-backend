@@ -7,6 +7,7 @@ const {
   getMyDetails,
   getSingleComplaint,
   getAllProjects,
+  createNotification
 } = require("../services/customer.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -159,4 +160,27 @@ exports.handleAllGetProjects = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(statusCode, { data: projects }, messaage));
+});
+
+exports.handleForgetPassword = asyncHandler(async (req, res) => {
+  const formData = req.body;
+  const { notification, statusCode, messaage } = await createNotification(
+    formData
+  );
+  if (!notification) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        messaage,
+      })
+    );
+  }
+  return res.status(200).json(
+    new ApiResponse(
+      statusCode,
+      {
+        data: notification,
+      },
+      messaage
+    )
+  );
 });

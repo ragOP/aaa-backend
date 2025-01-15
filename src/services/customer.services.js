@@ -140,24 +140,28 @@ exports.getMyDetails = async (id) => {
     messaage: "Customer details retrieved successfully",
     statusCode: 200,
   };
-}
+};
 exports.getSingleComplaint = async (id) => {
   const complaint = await Complaint.findById(id);
   if (!complaint) {
     return { complaint: null, message: "No complaint found", statusCode: 404 };
   }
-  const customerDetails = await Customer.findById(
-    complaint.customerId
-  ).select("-password");
+  const customerDetails = await Customer.findById(complaint.customerId).select(
+    "-password"
+  );
   const technicianDetails = await Engineer.findById(
     complaint.technician
   ).select("-password");
   return {
-    complaint: {...complaint.toObject(), customerId: customerDetails, technician: technicianDetails },
+    complaint: {
+      ...complaint.toObject(),
+      customerId: customerDetails,
+      technician: technicianDetails,
+    },
     messaage: "Complaint retrieved successfully",
     statusCode: 200,
   };
-}
+};
 
 exports.getAllProjects = async (customerId) => {
   try {
@@ -184,8 +188,6 @@ exports.getAllProjects = async (customerId) => {
       };
     });
 
-    
-
     return {
       projects: projectsWithDetails,
       message: "All projects retrieved successfully",
@@ -194,6 +196,37 @@ exports.getAllProjects = async (customerId) => {
   } catch (error) {
     return {
       message: "An error occurred while retrieving the projects",
+      error: error.message,
+      statusCode: 500,
+    };
+  }
+};
+
+exports.createNotification = async (formData) => {
+  try {
+    const { email, userName } = formData;
+    const customer = await Customer.findOne({
+      $or: [{ email: email, userName: userName }],
+    });
+    if (!customer) {
+      return {
+        message: "Customer not found",
+        statusCode: 404,
+      };
+    }
+
+    const notification = await Notification.create({
+      formData,
+    });
+
+    return {
+      notification,
+      message: "Notification created successfully",
+      statusCode: 201,
+    };
+  } catch (error) {
+    return {
+      message: "An error occurred while creating the notification",
       error: error.message,
       statusCode: 500,
     };

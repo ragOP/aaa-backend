@@ -9,6 +9,7 @@ const {
   handleGetMyDetails,
   handleSingleComplaint,
   handleAllGetProjects,
+  handleForgetPassword
 } = require("../controllers/customer.controllers");
 const { customer } = require("../middleware/protectedRoutes");
 const router = express.Router();
@@ -28,5 +29,6 @@ router.route("/raise-priorty/:complaintId").patch(customer, handleRaisePriority)
 router.route("/get-user/").get(customer, handleGetMyDetails);
 router.route("/get-single-complaint/:complaintId").get(customer, handleSingleComplaint);
 router.route("/get-all-projects").get(customer, handleAllGetProjects);
+router.route("/forget-password").get(customer, handleForgetPassword);
 
 module.exports = router;
