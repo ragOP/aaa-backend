@@ -24,6 +24,6 @@ router
     upload.fields([{ name: "completedVoiceNote", maxCount: 1 }]),
     handleCompletedJob
   );
-router.route("/forget-password").post(engineer, handleForgetPassword);  
+router.route("/forget-password").post(handleForgetPassword);  
 
 module.exports = router;
