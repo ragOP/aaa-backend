@@ -286,17 +286,29 @@ exports.handleGetAllCustomers = asyncHandler(async (req, res) => {
 
 exports.handleAddProject = asyncHandler(async (req, res) => {
   const { title, panels, customerId, siteLocation, activity } = req.body;
-  const warranty = req.files.warranty[0];
-  const AMC = req.files.AMC[0];
-  const technical_documentation = req.files.technical_documentation[0];
+  let warranty = "";
+  let AMC = "";
+  let technical_documentation = "";
 
-  if (!warranty || !technical_documentation || !AMC) {
-    return res.status(200).json(
-      new ApiResponse(400, {
-        message: "All files are required",
-      })
-    );
+  if(warranty){
+   warranty = req.files.warranty[0];
   }
+
+  if(AMC){
+    AMC = req.files.AMC[0];
+  }
+
+  if(technical_documentation){
+    technical_documentation = req.files.technical_documentation[0];
+  }
+
+  // if (!warranty || !technical_documentation || !AMC) {
+  //   return res.status(200).json(
+  //     new ApiResponse(400, {
+  //       message: "All files are required",
+  //     })
+  //   );
+  // }
 
   const { project, message, statusCode } = await addProject(
     customerId,

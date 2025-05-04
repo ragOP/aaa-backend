@@ -301,12 +301,24 @@ exports.addProject = async (
     return { engineer: null, message: "No Customer found", statusCode: 404 };
   }
 
-  const warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
-  const AMCPdf = await uploadPDF(AMC.path, "projects/pdfs");
-  const technical_documentationPdf = await uploadPDF(
-    technical_documentation.path,
-    "projects/pdfs"
-  );
+  let warrantyPdf = "";
+  let AMCPdf = "";
+  let technical_documentationPdf = "";
+
+ if( warranty ) {
+   warrantyPdf = await uploadPDF(warranty.path, "projects/pdfs");
+ }
+
+ if( AMC ) {
+  AMCPdf = await uploadPDF(AMC.path, "projects/pdfs");
+ }
+
+ if( technical_documentation ) {
+   technical_documentationPdf = await uploadPDF(
+     technical_documentation.path,
+     "projects/pdfs"
+   );
+ }
 
   const project = await Project.create({
     customerId: id,
