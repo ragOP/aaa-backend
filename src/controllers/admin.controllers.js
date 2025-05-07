@@ -25,7 +25,8 @@ const {
   getWarranty,
   editAmc,
   editWarranty,
-  getAllNotifications
+  getAllNotifications,
+  changePassword,
 } = require("../services/admin.services");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -700,3 +701,22 @@ exports.handleGetAllNotifications = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new ApiResponse(statusCode, { notifications }, message));
 })
+
+exports.handleChangePassword = asyncHandler(async (req, res) => {
+  const { newPassword, role, id } = req.body;
+  const { message, statusCode } = await changePassword(
+    id,
+    newPassword,
+    role
+  );
+
+  if (!message) {
+    return res.status(200).json(
+      new ApiResponse(statusCode, {
+        message,
+      })
+    );
+  }
+
+  return res.status(200).json(new ApiResponse(statusCode, { message }));
+});

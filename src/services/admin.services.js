@@ -640,3 +640,45 @@ exports.getAllNotifications = async () => {
     statusCode: 200,
   };
 };
+
+exports.changePassword = async (id, newPassword, role) => {
+  if (!newPassword) {
+    return {
+      user: null,
+      message: "Password is required",
+      statusCode: 401,
+    };
+  }
+  const existingUser = role === "customer" ? await Customer.findById(id) : await Engineer.findById(id);
+  if (!existingUser) {
+    return {
+      user: null,
+      message: "User not found",
+      statusCode: 404,
+    };
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
+  let user;
+  if (role === "customer") {
+    user = await Customer.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    });
+  } else if (role === "engineer") {
+    user = await Engineer.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    });
+  }
+  if (!user) {
+    return {
+      user: null,
+      message: "Failed to change password",
+      statusCode: 500,
+    };
+  }
+  return {
+    user,
+    message: "Password changed successfully",
+    statusCode: 200,
+  };
+}
