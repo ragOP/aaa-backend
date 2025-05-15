@@ -89,15 +89,6 @@ exports.handleCompletedJob = asyncHandler(async (req, res) => {
     ? req.files.completedVoiceNote[0]
     : null;
 
-
-  if(!repairDescription || !completedVoiceNote || !replacedParts || !remarks || !statusCode ){
-    return res.status(200).json(
-      new ApiResponse(400, {
-        message: "All fields are required",
-      })
-    );
-  }
-
   const { job, message, statuscode } = await completedJob(
     id,
     engineerId,
