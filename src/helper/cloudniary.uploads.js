@@ -30,6 +30,7 @@ exports.uploadVoiceNote = async (filePath, folder = "") => {
     const result = await cloudinary_js_config.uploader.upload(filePath, {
       folder,
       resource_type: "video",
+      format: "mp3",
     });
     await fs.unlink(filePath);
     return result.secure_url;
