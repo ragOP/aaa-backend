@@ -46,37 +46,44 @@ exports.customerLogin = async (userName, password) => {
 
 exports.createComplaint = async (
   customerId,
-  complaintData,
-  images,
-  voiceNote
+  complaintData = {},
+  images = [],
+  voiceNote = null
 ) => {
-  if (!images) {
-    return { complaint: null, message: "No images provided", statusCode: 404 };
+  let uploadedUrls = [];
+
+  if (Array.isArray(images) && images.length > 0) {
+    uploadedUrls = await uploadMultipleFiles(images, "complaints/images");
   }
-  const uploadedUrls = await uploadMultipleFiles(images, "complaints/images");
+
   let uploadedAudioUrl = "";
+
   if (voiceNote) {
     uploadedAudioUrl = await uploadVoiceNote(
       voiceNote.path,
       "complaints/voice_notes"
     );
   }
+
   const customer = await Customer.findById(customerId);
   if (!customer) {
     return { complaint: null, message: "Customer not found", statusCode: 404 };
   }
+
   const complaint = await Complaint.create({
     customerId,
     ...complaintData,
     images: uploadedUrls,
     voiceNote: uploadedAudioUrl,
   });
+
   return {
     complaint,
-    messaage: "Comaplaint registered successfully",
+    message: "Complaint registered successfully",
     statusCode: 201,
   };
 };
+
 
 exports.getMyComplaint = async (customerId) => {
   const complaints = await Complaint.find({ customerId }).sort({
