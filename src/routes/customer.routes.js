@@ -17,7 +17,6 @@ const upload = multer({ storage: storage });
 
 router.route("/login").post(handleCustomerLogin);
 router.route("/new-complaint/:customerId").post(
-  customer,
   upload.fields([
     { name: "images", maxCount: 5 },
     { name: "voiceNote", maxCount: 1 },
